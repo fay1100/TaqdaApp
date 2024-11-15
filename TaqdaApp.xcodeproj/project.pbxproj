@@ -14,6 +14,32 @@
 		5A22EEB92CE6750200E83596 /* TaqdaAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A22EEB82CE6750200E83596 /* TaqdaAppTests.swift */; };
 		5A22EEC32CE6750200E83596 /* TaqdaAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A22EEC22CE6750200E83596 /* TaqdaAppUITests.swift */; };
 		5A22EEC52CE6750200E83596 /* TaqdaAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A22EEC42CE6750200E83596 /* TaqdaAppUITestsLaunchTests.swift */; };
+		5A6BC77C2CE6AF80004FEC9C /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC77B2CE6AF80004FEC9C /* SplashScreenView.swift */; };
+		5A6BC7812CE6B048004FEC9C /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 5A6BC7802CE6B048004FEC9C /* SDWebImageSwiftUI */; };
+		5A6BC7832CE6B079004FEC9C /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7822CE6B079004FEC9C /* OnboardingView.swift */; };
+		5A6BC7852CE6B0B9004FEC9C /* On11.gif in Resources */ = {isa = PBXBuildFile; fileRef = 5A6BC7842CE6B0B9004FEC9C /* On11.gif */; };
+		5A6BC78A2CE6B328004FEC9C /* CloudKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7892CE6B328004FEC9C /* CloudKitManager.swift */; };
+		5A6BC78C2CE6B354004FEC9C /* CloudKitUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC78B2CE6B354004FEC9C /* CloudKitUtility.swift */; };
+		5A6BC78E2CE6B376004FEC9C /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC78D2CE6B376004FEC9C /* Item.swift */; };
+		5A6BC7902CE6B38B004FEC9C /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC78F2CE6B38B004FEC9C /* List.swift */; };
+		5A6BC7922CE6B39F004FEC9C /* SharedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7912CE6B39F004FEC9C /* SharedList.swift */; };
+		5A6BC7942CE6B3C5004FEC9C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7932CE6B3C5004FEC9C /* User.swift */; };
+		5A6BC7972CE6B412004FEC9C /* CreateListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7962CE6B412004FEC9C /* CreateListViewModel.swift */; };
+		5A6BC7992CE6B439004FEC9C /* ListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7982CE6B439004FEC9C /* ListViewModel.swift */; };
+		5A6BC79E2CE6B4A1004FEC9C /* GroceryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC79D2CE6B4A1004FEC9C /* GroceryModel.swift */; };
+		5A6BC7A02CE6B4C6004FEC9C /* MyFA13.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC79F2CE6B4C6004FEC9C /* MyFA13.mlmodel */; };
+		5A6BC7A22CE6B519004FEC9C /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7A12CE6B519004FEC9C /* AccountView.swift */; };
+		5A6BC7A42CE6B534004FEC9C /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7A32CE6B534004FEC9C /* SignInView.swift */; };
+		5A6BC7A62CE6B5E4004FEC9C /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7A52CE6B5E4004FEC9C /* MainTabView.swift */; };
+		5A6BC7AA2CE73A74004FEC9C /* On22.gif in Resources */ = {isa = PBXBuildFile; fileRef = 5A6BC7A92CE73A74004FEC9C /* On22.gif */; };
+		5A6BC7AF2CE73C67004FEC9C /* FavouriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7AE2CE73C67004FEC9C /* FavouriteView.swift */; };
+		5A6BC7B52CE73FF1004FEC9C /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7B42CE73FF1004FEC9C /* NotificationView.swift */; };
+		5A6BC7B92CE7401D004FEC9C /* GroceryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7B82CE7401D004FEC9C /* GroceryListView.swift */; };
+		5A6BC7BD2CE740B5004FEC9C /* ListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7BC2CE740B5004FEC9C /* ListsView.swift */; };
+		5A6BC7BF2CE740DE004FEC9C /* CreateListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7BE2CE740DE004FEC9C /* CreateListView.swift */; };
+		5A6BC7C32CE74161004FEC9C /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7C22CE74161004FEC9C /* CustomTextField.swift */; };
+		5A6BC7C52CE741BB004FEC9C /* CloudSharingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7C42CE741BB004FEC9C /* CloudSharingController.swift */; };
+		5A6BC7CC2CE76959004FEC9C /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7CB2CE76959004FEC9C /* ListView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +70,33 @@
 		5A22EEBE2CE6750200E83596 /* TaqdaAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TaqdaAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A22EEC22CE6750200E83596 /* TaqdaAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaqdaAppUITests.swift; sourceTree = "<group>"; };
 		5A22EEC42CE6750200E83596 /* TaqdaAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaqdaAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		5A6BC77B2CE6AF80004FEC9C /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
+		5A6BC7822CE6B079004FEC9C /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		5A6BC7842CE6B0B9004FEC9C /* On11.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = On11.gif; sourceTree = "<group>"; };
+		5A6BC7892CE6B328004FEC9C /* CloudKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitManager.swift; sourceTree = "<group>"; };
+		5A6BC78B2CE6B354004FEC9C /* CloudKitUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitUtility.swift; sourceTree = "<group>"; };
+		5A6BC78D2CE6B376004FEC9C /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		5A6BC78F2CE6B38B004FEC9C /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
+		5A6BC7912CE6B39F004FEC9C /* SharedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedList.swift; sourceTree = "<group>"; };
+		5A6BC7932CE6B3C5004FEC9C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		5A6BC7962CE6B412004FEC9C /* CreateListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateListViewModel.swift; sourceTree = "<group>"; };
+		5A6BC7982CE6B439004FEC9C /* ListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewModel.swift; sourceTree = "<group>"; };
+		5A6BC79D2CE6B4A1004FEC9C /* GroceryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroceryModel.swift; sourceTree = "<group>"; };
+		5A6BC79F2CE6B4C6004FEC9C /* MyFA13.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MyFA13.mlmodel; sourceTree = "<group>"; };
+		5A6BC7A12CE6B519004FEC9C /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
+		5A6BC7A32CE6B534004FEC9C /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		5A6BC7A52CE6B5E4004FEC9C /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		5A6BC7A92CE73A74004FEC9C /* On22.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = On22.gif; sourceTree = "<group>"; };
+		5A6BC7AD2CE73BA3004FEC9C /* TaqdaApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TaqdaApp.entitlements; sourceTree = "<group>"; };
+		5A6BC7AE2CE73C67004FEC9C /* FavouriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteView.swift; sourceTree = "<group>"; };
+		5A6BC7B42CE73FF1004FEC9C /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		5A6BC7B82CE7401D004FEC9C /* GroceryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroceryListView.swift; sourceTree = "<group>"; };
+		5A6BC7BC2CE740B5004FEC9C /* ListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsView.swift; sourceTree = "<group>"; };
+		5A6BC7BE2CE740DE004FEC9C /* CreateListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateListView.swift; sourceTree = "<group>"; };
+		5A6BC7C22CE74161004FEC9C /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		5A6BC7C42CE741BB004FEC9C /* CloudSharingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSharingController.swift; sourceTree = "<group>"; };
+		5A6BC7C82CE74DF9004FEC9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		5A6BC7CB2CE76959004FEC9C /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A6BC7812CE6B048004FEC9C /* SDWebImageSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +129,10 @@
 			isa = PBXGroup;
 			children = (
 				5A22EEA62CE6750100E83596 /* TaqdaApp */,
+				5A6BC7A82CE6B617004FEC9C /* View */,
+				5A6BC7882CE6B2F5004FEC9C /* CloudKit */,
+				5A6BC7952CE6B3F6004FEC9C /* ViewModel */,
+				5A6BC79C2CE6B46F004FEC9C /* Models */,
 				5A22EEB72CE6750200E83596 /* TaqdaAppTests */,
 				5A22EEC12CE6750200E83596 /* TaqdaAppUITests */,
 				5A22EEA52CE6750100E83596 /* Products */,
@@ -94,9 +152,10 @@
 		5A22EEA62CE6750100E83596 /* TaqdaApp */ = {
 			isa = PBXGroup;
 			children = (
+				5A6BC7C82CE74DF9004FEC9C /* Info.plist */,
+				5A6BC7AD2CE73BA3004FEC9C /* TaqdaApp.entitlements */,
+				5A6BC79F2CE6B4C6004FEC9C /* MyFA13.mlmodel */,
 				5A22EEA72CE6750100E83596 /* TaqdaAppApp.swift */,
-				5A22EEA92CE6750100E83596 /* ContentView.swift */,
-				5A22EEAB2CE6750200E83596 /* Assets.xcassets */,
 				5A22EEAD2CE6750200E83596 /* Preview Content */,
 			);
 			path = TaqdaApp;
@@ -123,8 +182,62 @@
 			children = (
 				5A22EEC22CE6750200E83596 /* TaqdaAppUITests.swift */,
 				5A22EEC42CE6750200E83596 /* TaqdaAppUITestsLaunchTests.swift */,
+				5A22EEAB2CE6750200E83596 /* Assets.xcassets */,
+				5A6BC7842CE6B0B9004FEC9C /* On11.gif */,
+				5A6BC7A92CE73A74004FEC9C /* On22.gif */,
 			);
 			path = TaqdaAppUITests;
+			sourceTree = "<group>";
+		};
+		5A6BC7882CE6B2F5004FEC9C /* CloudKit */ = {
+			isa = PBXGroup;
+			children = (
+				5A6BC7892CE6B328004FEC9C /* CloudKitManager.swift */,
+				5A6BC78B2CE6B354004FEC9C /* CloudKitUtility.swift */,
+				5A6BC78D2CE6B376004FEC9C /* Item.swift */,
+				5A6BC78F2CE6B38B004FEC9C /* List.swift */,
+				5A6BC7912CE6B39F004FEC9C /* SharedList.swift */,
+				5A6BC7932CE6B3C5004FEC9C /* User.swift */,
+				5A6BC7C42CE741BB004FEC9C /* CloudSharingController.swift */,
+			);
+			path = CloudKit;
+			sourceTree = "<group>";
+		};
+		5A6BC7952CE6B3F6004FEC9C /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				5A6BC7962CE6B412004FEC9C /* CreateListViewModel.swift */,
+				5A6BC7982CE6B439004FEC9C /* ListViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		5A6BC79C2CE6B46F004FEC9C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				5A6BC79D2CE6B4A1004FEC9C /* GroceryModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		5A6BC7A82CE6B617004FEC9C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				5A22EEA92CE6750100E83596 /* ContentView.swift */,
+				5A6BC7A32CE6B534004FEC9C /* SignInView.swift */,
+				5A6BC77B2CE6AF80004FEC9C /* SplashScreenView.swift */,
+				5A6BC7822CE6B079004FEC9C /* OnboardingView.swift */,
+				5A6BC7A12CE6B519004FEC9C /* AccountView.swift */,
+				5A6BC7A52CE6B5E4004FEC9C /* MainTabView.swift */,
+				5A6BC7BC2CE740B5004FEC9C /* ListsView.swift */,
+				5A6BC7CB2CE76959004FEC9C /* ListView.swift */,
+				5A6BC7B82CE7401D004FEC9C /* GroceryListView.swift */,
+				5A6BC7BE2CE740DE004FEC9C /* CreateListView.swift */,
+				5A6BC7C22CE74161004FEC9C /* CustomTextField.swift */,
+				5A6BC7B42CE73FF1004FEC9C /* NotificationView.swift */,
+				5A6BC7AE2CE73C67004FEC9C /* FavouriteView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -143,6 +256,9 @@
 			dependencies = (
 			);
 			name = TaqdaApp;
+			packageProductDependencies = (
+				5A6BC7802CE6B048004FEC9C /* SDWebImageSwiftUI */,
+			);
 			productName = TaqdaApp;
 			productReference = 5A22EEA42CE6750100E83596 /* TaqdaApp.app */;
 			productType = "com.apple.product-type.application";
@@ -215,6 +331,9 @@
 				Base,
 			);
 			mainGroup = 5A22EE9B2CE6750100E83596;
+			packageReferences = (
+				5A6BC77F2CE6B022004FEC9C /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+			);
 			productRefGroup = 5A22EEA52CE6750100E83596 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -232,7 +351,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A22EEAF2CE6750200E83596 /* Preview Assets.xcassets in Resources */,
+				5A6BC7AA2CE73A74004FEC9C /* On22.gif in Resources */,
 				5A22EEAC2CE6750200E83596 /* Assets.xcassets in Resources */,
+				5A6BC7852CE6B0B9004FEC9C /* On11.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,8 +378,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A6BC7A02CE6B4C6004FEC9C /* MyFA13.mlmodel in Sources */,
 				5A22EEAA2CE6750100E83596 /* ContentView.swift in Sources */,
+				5A6BC7B52CE73FF1004FEC9C /* NotificationView.swift in Sources */,
+				5A6BC79E2CE6B4A1004FEC9C /* GroceryModel.swift in Sources */,
+				5A6BC7A22CE6B519004FEC9C /* AccountView.swift in Sources */,
+				5A6BC78A2CE6B328004FEC9C /* CloudKitManager.swift in Sources */,
+				5A6BC7A42CE6B534004FEC9C /* SignInView.swift in Sources */,
+				5A6BC7CC2CE76959004FEC9C /* ListView.swift in Sources */,
+				5A6BC7C32CE74161004FEC9C /* CustomTextField.swift in Sources */,
+				5A6BC7BD2CE740B5004FEC9C /* ListsView.swift in Sources */,
 				5A22EEA82CE6750100E83596 /* TaqdaAppApp.swift in Sources */,
+				5A6BC7AF2CE73C67004FEC9C /* FavouriteView.swift in Sources */,
+				5A6BC7BF2CE740DE004FEC9C /* CreateListView.swift in Sources */,
+				5A6BC78E2CE6B376004FEC9C /* Item.swift in Sources */,
+				5A6BC7832CE6B079004FEC9C /* OnboardingView.swift in Sources */,
+				5A6BC78C2CE6B354004FEC9C /* CloudKitUtility.swift in Sources */,
+				5A6BC7A62CE6B5E4004FEC9C /* MainTabView.swift in Sources */,
+				5A6BC77C2CE6AF80004FEC9C /* SplashScreenView.swift in Sources */,
+				5A6BC7972CE6B412004FEC9C /* CreateListViewModel.swift in Sources */,
+				5A6BC7C52CE741BB004FEC9C /* CloudSharingController.swift in Sources */,
+				5A6BC7992CE6B439004FEC9C /* ListViewModel.swift in Sources */,
+				5A6BC7922CE6B39F004FEC9C /* SharedList.swift in Sources */,
+				5A6BC7B92CE7401D004FEC9C /* GroceryListView.swift in Sources */,
+				5A6BC7902CE6B38B004FEC9C /* List.swift in Sources */,
+				5A6BC7942CE6B3C5004FEC9C /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,11 +563,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TaqdaApp/TaqdaApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TaqdaApp/Preview Content\"";
+				DEVELOPMENT_TEAM = J359H9BY44;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TaqdaApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "تقضى";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -447,11 +595,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TaqdaApp/TaqdaApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TaqdaApp/Preview Content\"";
+				DEVELOPMENT_TEAM = J359H9BY44;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TaqdaApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "تقضى";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -582,6 +734,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5A6BC77F2CE6B022004FEC9C /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5A6BC7802CE6B048004FEC9C /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5A6BC77F2CE6B022004FEC9C /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5A22EE9C2CE6750100E83596 /* Project object */;
 }
