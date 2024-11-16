@@ -12,7 +12,7 @@ import Foundation
 import CloudKit
 
 class CloudKitManager {
-    let container = CKContainer.default()
+    let container = CKContainer(identifier: "iCloud.FaizahApp")
     let publicDB = CKContainer.default().publicCloudDatabase
 
     // Save record to CloudKit
@@ -37,19 +37,18 @@ class CloudKitManager {
         }
     }
 
-    // Add a new list
+
     func addList(list: List, completion: @escaping (Result<CKRecord, Error>) -> Void) {
         let record = list.toRecord()
         saveRecord(record: record, completion: completion)
     }
 
-    // Add a new item to a list
     func addItem(item: Item, completion: @escaping (Result<CKRecord, Error>) -> Void) {
         let record = item.toRecord()
         saveRecord(record: record, completion: completion)
     }
 
-    // Fetch all lists for a user
+
     func fetchUserLists(user: User, completion: @escaping (Result<[CKRecord], Error>) -> Void) {
         let predicate = NSPredicate(format: "owned_id == %@", user.recordID!)
         let query = CKQuery(recordType: "List", predicate: predicate)
@@ -61,4 +60,5 @@ class CloudKitManager {
             }
         }
     }
+
 }
