@@ -135,9 +135,9 @@ struct AccountView: View {
                         Color("backgroundAppColor")
                             .ignoresSafeArea()
 
-                        Image("Background")
-                            .resizable()
-                            .ignoresSafeArea()
+//                        Image("Background")
+//                            .resizable()
+//                            .ignoresSafeArea()
                         
                         VStack {
                             VStack(spacing: 8) {

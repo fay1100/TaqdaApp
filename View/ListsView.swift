@@ -23,14 +23,8 @@ struct ListsView: View {
     
     var body: some View {
         NavigationStack {
+            
             ZStack {
-                Color("backgroundAppColor")
-                    .ignoresSafeArea()
-
-                Image("Background")
-                    .resizable()
-                    .ignoresSafeArea()
-
                 VStack {
                     headerView
                     searchView
@@ -89,19 +83,6 @@ struct ListsView: View {
         .padding(.vertical)
     }
     
-//    var addButtonView: some View {
-//        HStack {
-//            NavigationLink(destination: CreateListView(userSession: viewModel.userSession)) {
-//                Image(systemName: "plus.circle.fill")
-//                    .resizable()
-//                    .frame(width: 36, height: 36)
-//                    .foregroundColor(Color("MainColor"))
-//            }
-//            .padding(.leading)
-//            .frame(maxWidth: .infinity, alignment: .leading)
-//        }
-//        .padding(.vertical)
-//    }
 
     var emptyStateView: some View {
         VStack {

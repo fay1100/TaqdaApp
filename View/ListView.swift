@@ -77,7 +77,6 @@ struct ListView: View {
                 .padding(.horizontal)
                 .padding(.top, 20)
 
-                // List Items Section
                 HStack {
                     Text("Items 🛒")
                         .font(.title3)
@@ -104,12 +103,13 @@ struct ListView: View {
                                                 .frame(width: 30, height: 30)
                                                 .overlay(
                                                     Circle().stroke(Color("PrimaryColor"), lineWidth: 2)
+                                                        
                                                 )
                                             if category.items.allSatisfy({ $0.isSelected }) {
                                                 Image(systemName: "checkmark")
                                                     .foregroundColor(.white)
                                             }
-                                        }
+                                        }.padding(.leading)
                                     }
 
                                     Text(viewModel.formattedCategoryName(category.name))
@@ -180,15 +180,15 @@ struct ListView: View {
 
                 VStack {
                     HStack(alignment: .center, spacing: 10) {
-                        ExpandingTextField(text: $newItem, dynamicHeight: $textFieldHeight, placeholder: "اكتب قائمتك")
+                        ExpandingTextField(text: $newItem, dynamicHeight: $textFieldHeight, placeholder: "Enter Your Grocery ")
                             .frame(height: textFieldHeight)
                             .padding(.vertical, 8)
                             .padding(.horizontal, 12)
-                            .background(Color.white) // تغيير لون الخلفية
+                            .background(Color.white) 
                             .cornerRadius(27)
                             .overlay(
-                                       RoundedRectangle(cornerRadius: 27) // حدود مستديرة
-                                        .stroke(Color.gray, lineWidth: 0.1) // لون الحدود وعرضها
+                            RoundedRectangle(cornerRadius: 27) // حدود مستديرة
+                                .stroke(Color.gray, lineWidth: 0.1) // لون الحدود وعرضها
                                    )
                         Button(action: {
                             // الزر بدون أي وظيفة حالياً
@@ -196,11 +196,11 @@ struct ListView: View {
                             ZStack {
                                 Circle()
                                     .fill(Color.purple.opacity(0.2))
-                                    .frame(width: 50, height: 50)
+                                    .frame(width: 45, height: 45)
 
                                 Image(systemName: "checkmark")
                                     .foregroundColor(Color("PrimaryColor"))
-                                    .font(.system(size: 24))
+                                    .font(.system(size: 20))
                             }
                         }
                     }
@@ -233,17 +233,14 @@ struct ListView_Previews: PreviewProvider {
             ])
         ]
         
-        // Provide mock listID and listName
         let mockListID = CKRecord.ID(recordName: "mockRecordID")
         let mockListName = "Sample List"
         
-        // Use the singleton instance of UserSession
         let createListViewModel = CreateListViewModel(userSession: UserSession.shared)
         
-        // Pass the categories, mock listID, listName, and createListViewModel into ListView
         ListView(categories: groceryItems, listID: mockListID, listName: mockListName, createListViewModel: createListViewModel)
-            .environmentObject(UserSession.shared) // Inject the singleton UserSession instance into the environment
-            .environment(\.layoutDirection, .rightToLeft) // Optional RTL layout
+            .environmentObject(UserSession.shared)
+            .environment(\.layoutDirection, .rightToLeft)
             .previewLayout(.sizeThatFits)
     }
 }

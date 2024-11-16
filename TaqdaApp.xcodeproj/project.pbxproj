@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A10BFBA2CE8185600D2AD2D /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5A10BFB92CE8185500D2AD2D /* Localizable.xcstrings */; };
 		5A22EEA82CE6750100E83596 /* TaqdaAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A22EEA72CE6750100E83596 /* TaqdaAppApp.swift */; };
 		5A22EEAA2CE6750100E83596 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A22EEA92CE6750100E83596 /* ContentView.swift */; };
 		5A22EEAC2CE6750200E83596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A22EEAB2CE6750200E83596 /* Assets.xcassets */; };
@@ -60,6 +61,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5A10BFB92CE8185500D2AD2D /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		5A22EEA42CE6750100E83596 /* TaqdaApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaqdaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A22EEA72CE6750100E83596 /* TaqdaAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaqdaAppApp.swift; sourceTree = "<group>"; };
 		5A22EEA92CE6750100E83596 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 		5A22EE9B2CE6750100E83596 = {
 			isa = PBXGroup;
 			children = (
+				5A10BFB92CE8185500D2AD2D /* Localizable.xcstrings */,
 				5A22EEA62CE6750100E83596 /* TaqdaApp */,
 				5A6BC7A82CE6B617004FEC9C /* View */,
 				5A6BC7882CE6B2F5004FEC9C /* CloudKit */,
@@ -329,6 +332,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ar,
 			);
 			mainGroup = 5A22EE9B2CE6750100E83596;
 			packageReferences = (
@@ -351,6 +355,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A22EEAF2CE6750200E83596 /* Preview Assets.xcassets in Resources */,
+				5A10BFBA2CE8185600D2AD2D /* Localizable.xcstrings in Resources */,
 				5A6BC7AA2CE73A74004FEC9C /* On22.gif in Resources */,
 				5A22EEAC2CE6750200E83596 /* Assets.xcassets in Resources */,
 				5A6BC7852CE6B0B9004FEC9C /* On11.gif in Resources */,

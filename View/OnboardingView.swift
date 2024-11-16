@@ -24,16 +24,16 @@ struct OnboardingView: View {
             if isOnboardingComplete {
                 // هنا يمكن إضافة الكود في حال اكتمال الأونبوردنق
             } else {
-                Color("backgroundAppColor")
-                    .ignoresSafeArea()
-
-                Image("Background")
-                    .resizable()
-                    .ignoresSafeArea()
-                
-                Image("Back1")
-                    .ignoresSafeArea()
-                    .offset(y: -140)
+//                Color("backgroundAppColor")
+//                    .ignoresSafeArea()
+//
+//                Image("Background")
+//                    .resizable()
+//                    .ignoresSafeArea()
+//                
+//                Image("Back1")
+//                    .ignoresSafeArea()
+//                    .offset(y: -140)
 
                 VStack {
                     HStack {
