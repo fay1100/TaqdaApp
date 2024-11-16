@@ -9,7 +9,7 @@ import CloudKit
 
 struct CloudSharingController: UIViewControllerRepresentable {
     let share: CKShare
-    let container: CKContainer
+    let container = CKContainer(identifier: "iCloud.FaizahApp")
 
     func makeUIViewController(context: Context) -> UICloudSharingController {
         let controller = UICloudSharingController(share: share, container: container)

@@ -11,7 +11,7 @@ class CloudKitUserBootcampViewModel: ObservableObject {
     @Published var profileImage: UIImage? = nil
     @Published var isLoggedIn: Bool = true // Managing login state here
     
-    let container = CKContainer.default()
+    let container = CKContainer(identifier: "iCloud.FaizahApp")    
     var cancellables = Set<AnyCancellable>()
 //
 //    init() {

@@ -34,34 +34,41 @@ struct CategoryConstants {
     ]
 }
 
+
+
+// MARK: - Item Model
 struct Item {
-    var itemId: UUID
-    var nameItem: String
-    var numberOfItem: Int64
-    var listId: CKRecord.Reference
-    var category: String  // Changed from categories array to a single category string
+    var recordID: CKRecord.ID?  // Optional record ID for CloudKit
+    var itemId: UUID  // Unique identifier for the item
+    var nameItem: String  // Name of the item
+    var numberOfItem: Int64  // Quantity of the item
+    var listId: CKRecord.Reference  // Reference to the associated list
+    var category: String  // Category of the item
+
+    // Convert the model to a CKRecord for saving to CloudKit
     func toRecord() -> CKRecord {
-        let record = CKRecord(recordType: "Item")
-        record["itemId"] = itemId.uuidString as CKRecordValue // Use UUID as a string
+        let record = recordID != nil ? CKRecord(recordType: "Item", recordID: recordID!) : CKRecord(recordType: "Item")
+        record["itemId"] = itemId.uuidString as CKRecordValue  // Store UUID as a string
         record["nameItem"] = nameItem as CKRecordValue
         record["numberOfItem"] = numberOfItem as CKRecordValue
-        record["listId"] = listId // Ensure listId is CKRecord.Reference
-
+        record["listId"] = listId  // Reference to the associated list
         record["category"] = category as CKRecordValue
         return record
     }
 
+    // Initialize the model from a CKRecord
     init(record: CKRecord) {
-        self.itemId = UUID(uuidString: record["itemId"] as? String ?? "") ?? UUID() // Parse itemId as UUID from String
+        self.recordID = record.recordID
+        self.itemId = UUID(uuidString: record["itemId"] as? String ?? "") ?? UUID()  // Parse itemId as UUID from string
         self.nameItem = record["nameItem"] as? String ?? ""
         self.numberOfItem = record["numberOfItem"] as? Int64 ?? 0
-        self.listId = record["listId"] as! CKRecord.Reference
+        self.listId = record["listId"] as! CKRecord.Reference  // Force unwrap since listId is mandatory
         self.category = record["category"] as? String ?? ""
     }
 
-
-    // Convenience initializer for new Items (no CKRecord yet)
+    // Convenience initializer for creating new Items
     init(itemId: UUID = UUID(), nameItem: String, numberOfItem: Int64, listId: CKRecord.Reference, category: String) {
+        self.recordID = nil
         self.itemId = itemId
         self.nameItem = nameItem
         self.numberOfItem = numberOfItem
@@ -69,3 +76,4 @@ struct Item {
         self.category = category
     }
 }
+

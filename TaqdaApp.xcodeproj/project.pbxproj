@@ -42,6 +42,7 @@
 		5A6BC7C32CE74161004FEC9C /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7C22CE74161004FEC9C /* CustomTextField.swift */; };
 		5A6BC7C52CE741BB004FEC9C /* CloudSharingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7C42CE741BB004FEC9C /* CloudSharingController.swift */; };
 		5A6BC7CC2CE76959004FEC9C /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7CB2CE76959004FEC9C /* ListView.swift */; };
+		EE2ABA1A2CE945F300464D4E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2ABA192CE945F300464D4E /* ViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +101,7 @@
 		5A6BC7C42CE741BB004FEC9C /* CloudSharingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSharingController.swift; sourceTree = "<group>"; };
 		5A6BC7C82CE74DF9004FEC9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		5A6BC7CB2CE76959004FEC9C /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
+		EE2ABA192CE945F300464D4E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,6 +213,7 @@
 			isa = PBXGroup;
 			children = (
 				5A6BC7962CE6B412004FEC9C /* CreateListViewModel.swift */,
+				EE2ABA192CE945F300464D4E /* ViewController.swift */,
 				5A6BC7982CE6B439004FEC9C /* ListViewModel.swift */,
 			);
 			path = ViewModel;
@@ -393,6 +396,7 @@
 				5A6BC78A2CE6B328004FEC9C /* CloudKitManager.swift in Sources */,
 				5A6BC7A42CE6B534004FEC9C /* SignInView.swift in Sources */,
 				5A6BC7CC2CE76959004FEC9C /* ListView.swift in Sources */,
+				EE2ABA1A2CE945F300464D4E /* ViewController.swift in Sources */,
 				5A6BC7C32CE74161004FEC9C /* CustomTextField.swift in Sources */,
 				5A6BC7BD2CE740B5004FEC9C /* ListsView.swift in Sources */,
 				5A22EEA82CE6750100E83596 /* TaqdaAppApp.swift in Sources */,
