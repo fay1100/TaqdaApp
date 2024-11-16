@@ -13,10 +13,8 @@ struct SplashScreenView: View {
     
     var body: some View {
         ZStack {
-            // Background color with no specific accessibility information
-            Color(.white)
+            Color("backgroundApp")
                 .ignoresSafeArea()
-
             // Background image
             Image("SplashScreenBackground")
                 .resizable()

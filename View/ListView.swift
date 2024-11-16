@@ -1,15 +1,16 @@
 import SwiftUI
 import CloudKit
+import UserNotifications
 
 struct ListView: View {
     @Environment(\.layoutDirection) var layoutDirection
     @State private var navigateToMainTab = false
     @ObservedObject private var viewModel: ListViewModel
-    @State private var showShareSheet = false
     @State private var showAlert = false
-    @ObservedObject var createListViewModel: CreateListViewModel
-    var listName: String
+    @State private var isNotificationPermissionGranted = false // حالة إذن الإشعارات
 
+    @ObservedObject var createListViewModel: CreateListViewModel
+    @State private var listName: String // لإدخال اسم القائمة
     @State private var newItem: String = "" // لإدخال النص
     @State private var textFieldHeight: CGFloat = 40 // ارتفاع الحقل
 
@@ -17,17 +18,17 @@ struct ListView: View {
 
     init(categories: [GroceryCategory], listID: CKRecord.ID?, listName: String?, createListViewModel: CreateListViewModel) {
         self.viewModel = ListViewModel(categories: categories, listID: listID, listName: listName, createListViewModel: createListViewModel)
-        self.listName = listName ?? "Unnamed List"
+        self._listName = State(initialValue: listName ?? "")
         self.createListViewModel = createListViewModel
     }
 
     var body: some View {
         ZStack {
-            Color("backgroundAppColor").ignoresSafeArea()
+            Color("backgroundApp")
+                .ignoresSafeArea()
             Image("Background").resizable().ignoresSafeArea()
 
             VStack {
-                // Header Section
                 HStack {
                     Button(action: {
                         if viewModel.isListComplete {
@@ -47,9 +48,10 @@ struct ListView: View {
                         }
                     }
                     Spacer()
-                    Text(listName)
+                    TextField("Enter Name", text: $listName)
                         .font(.system(size: 22, weight: .bold))
                         .multilineTextAlignment(.center)
+                        .foregroundColor(Color("PrimaryColor"))
                     Spacer()
                     Menu {
                         Button(action: {
@@ -83,7 +85,25 @@ struct ListView: View {
                         .fontWeight(.bold)
                         .foregroundColor(Color("NameColor"))
                         .padding(.leading)
+
                     Spacer()
+
+                    Menu {
+                        Button("Every Week", action: { scheduleReminder(interval: .weekly) })
+                        Button("Every Two Weeks", action: { scheduleReminder(interval: .biweekly) })
+                        Button("Every Three Weeks", action: { scheduleReminder(interval: .threeWeeks) })
+                        Button("Every Month", action: { scheduleReminder(interval: .monthly) })
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .fill(Color("CircleColor"))
+                                .frame(width: 40, height: 40)
+                            Image(systemName: "calendar.badge.clock")
+                                .resizable()
+                                .frame(width: 25, height: 25)
+                                .foregroundColor(Color("PrimaryColor"))
+                        }.padding(.trailing)
+                    }
                 }
                 .padding(.top, 15)
 
@@ -93,29 +113,26 @@ struct ListView: View {
 
                         VStack(alignment: .leading, spacing: 16) {
                             HStack {
-                                HStack {
-                                    Button(action: {
-                                        viewModel.toggleCategorySelection(for: categoryIndex)
-                                    }) {
-                                        ZStack {
-                                            Circle()
-                                                .fill(category.items.allSatisfy { $0.isSelected } ? Color("PrimaryColor") : Color.clear)
-                                                .frame(width: 30, height: 30)
-                                                .overlay(
-                                                    Circle().stroke(Color("PrimaryColor"), lineWidth: 2)
-                                                        
-                                                )
-                                            if category.items.allSatisfy({ $0.isSelected }) {
-                                                Image(systemName: "checkmark")
-                                                    .foregroundColor(.white)
-                                            }
-                                        }.padding(.leading)
-                                    }
-
-                                    Text(viewModel.formattedCategoryName(category.name))
-                                        .font(.system(size: 22, weight: .bold))
-                                        .foregroundColor(Color("NameColor"))
+                                Button(action: {
+                                    viewModel.toggleCategorySelection(for: categoryIndex)
+                                }) {
+                                    ZStack {
+                                        Circle()
+                                            .fill(category.items.allSatisfy { $0.isSelected } ? Color("PrimaryColor") : Color.clear)
+                                            .frame(width: 30, height: 30)
+                                            .overlay(
+                                                Circle().stroke(Color("PrimaryColor"), lineWidth: 2)
+                                            )
+                                        if category.items.allSatisfy({ $0.isSelected }) {
+                                            Image(systemName: "checkmark")
+                                                .foregroundColor(.white)
+                                        }
+                                    }.padding(.leading)
                                 }
+
+                                Text(viewModel.formattedCategoryName(category.name))
+                                    .font(.system(size: 22, weight: .bold))
+                                    .foregroundColor(Color("NameColor"))
                                 Spacer()
                             }
                             .padding(layoutDirection == .leftToRight ? .leading : .trailing)
@@ -184,14 +201,14 @@ struct ListView: View {
                             .frame(height: textFieldHeight)
                             .padding(.vertical, 8)
                             .padding(.horizontal, 12)
-                            .background(Color.white) 
+                            .background(Color.white)
                             .cornerRadius(27)
                             .overlay(
-                            RoundedRectangle(cornerRadius: 27) // حدود مستديرة
-                                .stroke(Color.gray, lineWidth: 0.1) // لون الحدود وعرضها
-                                   )
+                                RoundedRectangle(cornerRadius: 27)
+                                    .stroke(Color.gray, lineWidth: 0.1)
+                            )
                         Button(action: {
-                            // الزر بدون أي وظيفة حالياً
+                            addNewItem()
                         }) {
                             ZStack {
                                 Circle()
@@ -212,13 +229,98 @@ struct ListView: View {
                     )
                     .padding(.horizontal)
                 }
-
             }
         }
         .navigationBarBackButtonHidden(true)
     }
+
+    private func addNewItem() {
+        guard !listName.isEmpty else {
+            print("List name is required.")
+            return
+        }
+
+        createListViewModel.saveListToCloudKit(userSession: userSession, listName: listName) { listID in
+            guard let listID = listID else { return }
+            let listReference = CKRecord.Reference(recordID: listID, action: .deleteSelf)
+            createListViewModel.classifyProducts()
+
+            for category in createListViewModel.categorizedProducts {
+                for item in category.items {
+                    createListViewModel.saveItem(
+                        name: item.name,
+                        quantity: Int64(item.quantity),
+                        listId: listReference,
+                        category: category.name
+                    ) { success in
+                        if success {
+                            print("Item '\(item.name)' saved successfully.")
+                        } else {
+                            print("Failed to save item '\(item.name)'.")
+                        }
+                    }
+                }
+            }
+        }
+
+        // Clear input fields
+        newItem = ""
+    }
+
+    private func requestNotificationPermission(completion: @escaping (Bool) -> Void) {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
+            completion(granted && error == nil)
+        }
+    }
+
+    private func scheduleReminder(interval: ReminderInterval) {
+        if !isNotificationPermissionGranted {
+            requestNotificationPermission { granted in
+                if granted {
+                    isNotificationPermissionGranted = true
+                    createReminder(interval: interval)
+                }
+            }
+        } else {
+            createReminder(interval: interval)
+        }
+    }
+
+    private func createReminder(interval: ReminderInterval) {
+        let content = UNMutableNotificationContent()
+
+        let languageCode = Locale.preferredLanguages.first ?? "en"
+
+        if languageCode.starts(with: "ar") {
+            content.title = "شَطبة"
+            content.body = "حان وقت التسوق! تحقق من قائمتك اليوم."
+        } else {
+            content.title = "Shaṭba"
+            content.body = "It's shopping time! Check your list today."
+        }
+
+        content.sound = UNNotificationSound.default
+
+        let trigger: UNNotificationTrigger
+        switch interval {
+        case .weekly:
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 604800, repeats: true)
+        case .biweekly:
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1209600, repeats: true)
+        case .threeWeeks:
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1814400, repeats: true)
+        case .monthly:
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2419200, repeats: true)
+        }
+
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request)
+    }
 }
 
+enum ReminderInterval {
+    case weekly, biweekly, threeWeeks, monthly
+}
 struct ListView_Previews: PreviewProvider {
     static var previews: some View {
         // Create mock data for testing

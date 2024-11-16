@@ -71,12 +71,10 @@ struct SignInView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color("backgroundAppColor")
+                Color("backgroundApp")
                     .ignoresSafeArea()
                 
-                Image("Background")
-                    .resizable()
-                    .ignoresSafeArea()
+   
                 
                 Image("Back1")
                     .ignoresSafeArea()
@@ -85,7 +83,7 @@ struct SignInView: View {
                 VStack {
                     Text("Sort Fast, Shop Faster.")
                         .font(.system(size: 25, weight: .bold, design: .default))
-                        .foregroundColor(Color.black)
+                        .foregroundColor(Color("titleColor"))
                         .padding(.bottom, 20)
                         .accessibilityLabel("Sort Fast, Shop Faster.")
                         .accessibilityHint("Welcome message")

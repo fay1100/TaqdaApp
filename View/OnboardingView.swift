@@ -15,8 +15,8 @@ struct OnboardingView: View {
     @Environment(\.colorScheme) var colorScheme
     
     let onboardingData = [
-        OnboardingData(gifName: "On11", darkGifName: "on2_dark", title: NSLocalizedString("Sort", comment: ""), description: NSLocalizedString("Organize your grocery items using AI-powered categorization sorting them by category.", comment: "")),
-        OnboardingData(gifName: "On22", darkGifName: "On11", title: NSLocalizedString("Collaborative", comment: ""), description: NSLocalizedString("Multiple users to collaborate with instant updates to shared grocery lists.", comment: ""))
+        OnboardingData(gifName: "On11", darkGifName: "On11", title: NSLocalizedString("Sort", comment: ""), description: NSLocalizedString("Organize your grocery items using AI-powered categorization sorting them by category.", comment: "")),
+        OnboardingData(gifName: "On22233", darkGifName: "On22233", title: NSLocalizedString("Collaborative", comment: ""), description: NSLocalizedString("Multiple users to collaborate with instant updates to shared grocery lists.", comment: ""))
     ]
     
     var body: some View {
@@ -24,9 +24,8 @@ struct OnboardingView: View {
             if isOnboardingComplete {
                 // هنا يمكن إضافة الكود في حال اكتمال الأونبوردنق
             } else {
-//                Color("backgroundAppColor")
-//                    .ignoresSafeArea()
-//
+                Color("backgroundApp")
+                    .ignoresSafeArea()
 //                Image("Background")
 //                    .resizable()
 //                    .ignoresSafeArea()
@@ -51,7 +50,6 @@ struct OnboardingView: View {
                     TabView(selection: $currentPage) {
                         ForEach(0..<onboardingData.count) { index in
                             VStack(spacing: 5) {
-                                // تحديد الـGIF بناءً على الصفحة الحالية و الوضع الداكن أو الفاتح
                                 AnimatedImage(name: (colorScheme == .dark ? onboardingData[index].darkGifName : onboardingData[index].gifName) + ".gif")
                                     .resizable()
                                     .scaledToFit()
@@ -64,12 +62,12 @@ struct OnboardingView: View {
                                 VStack(spacing: 0) {
                                     Text(onboardingData[index].title)
                                         .font(.system(size: 28, weight: .bold, design: .default))
-                                        .foregroundColor(Color.black)
+                                        .foregroundColor(Color("titleColor"))
                                         .accessibilityAddTraits(.isHeader)
                                     
                                     Text(onboardingData[index].description)
                                         .font(.system(size: 13, weight: .bold, design: .default))
-                                        .foregroundColor(Color.black)
+                                        .foregroundColor(Color("titleColor"))
                                         .multilineTextAlignment(.center)
                                         .frame(width: 300, height: 80)
                                         .accessibilityLabel(onboardingData[index].description)

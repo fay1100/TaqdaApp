@@ -14,10 +14,8 @@ struct FavouriteView: View {
         NavigationStack {
 
         ZStack {
-            Color("backgroundAppColor")
+            Color("backgroundApp")
                 .ignoresSafeArea()
-            
-          
             VStack {
                 
                 HStack {
@@ -52,8 +50,8 @@ struct FavouriteView: View {
                     VStack(alignment: .leading) {
                         Text("Welcome")
                             .font(.subheadline)
-                            .foregroundColor(Color.black)
-                        
+                            .foregroundColor(Color("Wcolor"))
+
                         Text("\(vm.userName)")
                             .font(.title2)
                             .foregroundColor(Color("PrimaryColor"))

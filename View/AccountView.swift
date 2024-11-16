@@ -132,8 +132,8 @@ struct AccountView: View {
             Group {
                 if vm.isLoggedIn {
                     ZStack {
-                        Color("backgroundAppColor")
-                            .ignoresSafeArea()
+                        Color("backgroundApp")
+                            .ignoresSafeArea()                            .ignoresSafeArea()
 
 //                        Image("Background")
 //                            .resizable()
@@ -176,14 +176,14 @@ struct AccountView: View {
                             Spacer().frame(height: 40)
                             
                             VStack(spacing: 0) {
-                                SettingRow(icon: "globe", title: NSLocalizedString("Language", comment: ""), iconColor: Color("NameColor"), textColor: Color("titleColor")) {
+                                SettingRow(icon: "globe", title: NSLocalizedString("Language", comment: ""), iconColor: Color("PrimaryColor"), textColor: Color("titleColor")) {
                                     openAppSettings()
                                 }
                                 Divider()
                                 
                                 SettingRow(icon: colorScheme == .dark ? "sun.max" : "moon",
                                            title: colorScheme == .dark ? NSLocalizedString("Light Mode", comment: "") : NSLocalizedString("Dark Mode", comment: ""),
-                                           iconColor: Color("NameColor"), textColor: Color("titleColor")) {
+                                           iconColor: Color("PrimaryColor"), textColor: Color("titleColor")) {
                                     isDarkMode.toggle()
                                     UIApplication.shared.windows.first?.overrideUserInterfaceStyle = isDarkMode ? .dark : .light
                                 }

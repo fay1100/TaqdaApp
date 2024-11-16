@@ -25,6 +25,8 @@ struct ListsView: View {
         NavigationStack {
             
             ZStack {
+                Color("backgroundApp")
+                    .ignoresSafeArea()
                 VStack {
                     headerView
                     searchView
@@ -244,7 +246,7 @@ struct ListsView: View {
         VStack(alignment: .leading) {
             Text("Welcome")
                 .font(.subheadline)
-                .foregroundColor(Color.black)
+                .foregroundColor(Color("Wcolor"))
             Text("\(vm.userName)")
                 .font(.title2)
                 .foregroundColor(Color("NameColor"))

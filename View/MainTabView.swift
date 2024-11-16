@@ -74,7 +74,7 @@ struct MainTabView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .frame(height: 80)
-                    .background(Color("bakgroundTap")
+                    .background(Color("bakgroundtap")
                                     .cornerRadius(20, corners: [.topLeft, .topRight]))
                     .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                 }
