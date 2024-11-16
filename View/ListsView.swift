@@ -170,7 +170,14 @@ struct ListsView: View {
                     listName: selectedList?.listName,
                     createListViewModel: viewModel
                 ),
-                isActive: .constant(false) // تعطيل التنقل في Preview
+                isActive: .constant(false)
+                
+                
+                
+                
+                
+                
+                // تعطيل التنقل في Preview
             ) { EmptyView() }
         )
     }
