@@ -214,7 +214,14 @@
       }
     },
     "Enter Name" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ادخل اسم "
+          }
+        }
+      }
     },
     "Every Month" : {
       "localizations" : {
@@ -361,6 +368,9 @@
       }
     },
     "Hello, world!" : {
+
+    },
+    "In 10 Minutes" : {
 
     },
     "Items 🛒" : {
@@ -511,8 +521,25 @@
         }
       }
     },
+    "No Notifications" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا يوجد اشعارات "
+          }
+        }
+      }
+    },
     "Notification" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الاشعارات"
+          }
+        }
+      }
     },
     "Organize your grocery items using AI-powered categorization sorting them by category." : {
       "localizations" : {
@@ -567,7 +594,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "jkzdl"
+            "value" : "تصنيف"
           }
         },
         "en" : {

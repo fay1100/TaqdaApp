@@ -87,6 +87,7 @@ struct ListView: View {
                     Spacer()
 
                     Menu {
+                        Button("In 10 Minutes", action: { scheduleReminder(interval: .tenMinutes) })
                         Button("Every Week", action: { scheduleReminder(interval: .weekly) })
                         Button("Every Two Weeks", action: { scheduleReminder(interval: .biweekly) })
                         Button("Every Three Weeks", action: { scheduleReminder(interval: .threeWeeks) })
@@ -102,6 +103,7 @@ struct ListView: View {
                                 .foregroundColor(Color("PrimaryColor"))
                         }.padding(.trailing)
                     }
+
                 }
                 .padding(.top, 15)
 
@@ -242,19 +244,16 @@ struct ListView: View {
             return
         }
 
-        // Check if the list already exists
         if let existingListID = listID {
-            // Update the existing list by adding a new item
             let listReference = CKRecord.Reference(recordID: existingListID, action: .none)
             createListViewModel.saveItem(
                 name: newItem,
                 quantity: 1,
                 listId: listReference,
-                category: "Uncategorized" // Default category
+                category: "Uncategorized"
             ) { success in
                 if success {
                     print("Item '\(newItem)' added to existing list successfully.")
-                    // Refresh items for the list
                     self.viewModel.fetchItems(for: existingListID) { _ in
                         print("Items refreshed.")
                     }
@@ -292,7 +291,7 @@ struct ListView: View {
             }
         }
 
-        newItem = "" // Clear the input field
+        newItem = ""
     }
 
 
@@ -318,13 +317,16 @@ struct ListView: View {
     private func createReminder(interval: ReminderInterval) {
         let content = UNMutableNotificationContent()
 
-        let languageCode = Locale.preferredLanguages.first ?? "en"
+        if listName.isEmpty {
+            content.title = "تقضى"
+        } else {
+            content.title = listName
+        }
 
+        let languageCode = Locale.preferredLanguages.first ?? "en"
         if languageCode.starts(with: "ar") {
-            content.title = "شَطبة"
             content.body = "حان وقت التسوق! تحقق من قائمتك اليوم."
         } else {
-            content.title = "Shaṭba"
             content.body = "It's shopping time! Check your list today."
         }
 
@@ -332,6 +334,8 @@ struct ListView: View {
 
         let trigger: UNNotificationTrigger
         switch interval {
+        case .tenMinutes:
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
         case .weekly:
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: 604800, repeats: true)
         case .biweekly:
@@ -343,12 +347,50 @@ struct ListView: View {
         }
 
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request)
+
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Failed to schedule notification: \(error.localizedDescription)")
+            } else {
+                print("Notification scheduled successfully for \(listName).")
+            }
+        }
+
+        // حفظ الإشعار الجديد في قائمة الإشعارات
+        let notification = NotificationItem(id: UUID(), title: content.title, message: content.body, date: Date())
+        saveNotification(notification)
     }
+
+
+
+    private func saveNotification(_ notification: NotificationItem) {
+        do {
+            var notifications = loadNotifications() // تحميل الإشعارات الحالية
+            notifications.append(notification)
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(notifications)
+            UserDefaults.standard.set(data, forKey: "notificationsKey")
+        } catch {
+            print("Failed to save notification: \(error.localizedDescription)")
+        }
+    }
+
+    private func loadNotifications() -> [NotificationItem] {
+        do {
+            if let data = UserDefaults.standard.data(forKey: "notificationsKey") {
+                let decoder = JSONDecoder()
+                return try decoder.decode([NotificationItem].self, from: data)
+            }
+        } catch {
+            print("Failed to load notifications: \(error.localizedDescription)")
+        }
+        return []
+    }
+
 }
 
 enum ReminderInterval {
-    case weekly, biweekly, threeWeeks, monthly
+    case tenMinutes, weekly, biweekly, threeWeeks, monthly
 }
 
 struct ListView_Previews: PreviewProvider {

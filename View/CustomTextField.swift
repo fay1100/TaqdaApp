@@ -109,7 +109,7 @@ struct ExpandingTextField: UIViewRepresentable {
 
     func updateUIView(_ uiView: UITextView, context: Context) {
         uiView.text = text.isEmpty ? placeholder : text
-        uiView.textColor = text.isEmpty ? UIColor.gray : UIColor.label
+        uiView.textColor = text.isEmpty ? UIColor.gray : UIColor.black // اللون الأسود للنص المدخل
         ExpandingTextField.recalculateHeight(view: uiView, result: $dynamicHeight)
     }
 
@@ -127,14 +127,14 @@ struct ExpandingTextField: UIViewRepresentable {
         func textViewDidBeginEditing(_ textView: UITextView) {
             if textView.text == parent.placeholder {
                 textView.text = ""
-                textView.textColor = UIColor.label
+                textView.textColor = UIColor.black // تغيير اللون إلى الأسود
             }
         }
 
         func textViewDidEndEditing(_ textView: UITextView) {
             if textView.text.isEmpty {
                 textView.text = parent.placeholder
-                textView.textColor = UIColor.gray
+                textView.textColor = UIColor.gray // اللون الرمادي للنص الافتراضي
             }
         }
 
