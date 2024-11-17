@@ -95,7 +95,11 @@ struct ListsView: View {
             
             HStack {
                 if userSession.checkIfUserIsSignedIn() {
-                    NavigationLink(destination: CreateListView(userSession: viewModel.userSession)) {
+                    NavigationLink(destination:ListView( 
+                        categories: viewModel.categorizedProducts,
+                               listID: selectedList?.recordID,
+                               listName: selectedList?.listName,
+                               userSession: userSession)) {
                         ZStack {
                             RoundedRectangle(cornerRadius: 8)
                                 .fill(Color("PrimaryColor"))
@@ -127,7 +131,11 @@ struct ListsView: View {
     var listView: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                NavigationLink(destination: CreateListView(userSession: viewModel.userSession)) {
+                NavigationLink(destination:ListView(
+                    categories: viewModel.categorizedProducts,
+                           listID: selectedList?.recordID,
+                           listName: selectedList?.listName,
+                           userSession: userSession)) {
                     ZStack {
                         RoundedRectangle(cornerRadius: 8)
                             .fill(Color("PrimaryColor"))
@@ -166,9 +174,9 @@ struct ListsView: View {
             NavigationLink(
                 destination: ListView(
                     categories: viewModel.categorizedProducts,
-                    listID: selectedList?.recordID,
-                    listName: selectedList?.listName,
-                    createListViewModel: viewModel
+                           listID: selectedList?.recordID,
+                           listName: selectedList?.listName,
+                           userSession: userSession
                 ),
                 isActive: .constant(false)
                 

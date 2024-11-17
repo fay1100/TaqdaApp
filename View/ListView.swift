@@ -7,19 +7,19 @@ struct ListView: View {
     @State private var navigateToMainTab = false
     @ObservedObject private var viewModel: ListViewModel
     @State private var showAlert = false
-    @State private var isNotificationPermissionGranted = false // حالة إذن الإشعارات
+    @State private var isNotificationPermissionGranted = false
 
-    @ObservedObject var createListViewModel: CreateListViewModel
-    @State private var listName: String // لإدخال اسم القائمة
-    @State private var newItem: String = "" // لإدخال النص
-    @State private var textFieldHeight: CGFloat = 40 // ارتفاع الحقل
+    @ObservedObject private var createListViewModel: CreateListViewModel
+    @State private var listName: String
+    @State private var newItem: String = ""
+    @State private var textFieldHeight: CGFloat = 40
 
     @EnvironmentObject var userSession: UserSession
 
-    init(categories: [GroceryCategory], listID: CKRecord.ID?, listName: String?, createListViewModel: CreateListViewModel) {
-        self.viewModel = ListViewModel(categories: categories, listID: listID, listName: listName, createListViewModel: createListViewModel)
+    init(categories: [GroceryCategory], listID: CKRecord.ID?, listName: String?, userSession: UserSession) {
+        self.viewModel = ListViewModel(categories: categories, listID: listID, listName: listName, createListViewModel: CreateListViewModel(userSession: userSession))
         self._listName = State(initialValue: listName ?? "")
-        self.createListViewModel = createListViewModel
+        self.createListViewModel = CreateListViewModel(userSession: userSession)
     }
 
     var body: some View {
@@ -240,28 +240,14 @@ struct ListView: View {
             return
         }
 
-        createListViewModel.saveListToCloudKit(userSession: userSession, listName: listName) { listID in
-            guard let listID = listID else { return }
-            let listReference = CKRecord.Reference(recordID: listID, action: .deleteSelf)
-            createListViewModel.classifyProducts()
-
-            for category in createListViewModel.categorizedProducts {
-                for item in category.items {
-                    createListViewModel.saveItem(
-                        name: item.name,
-                        quantity: Int64(item.quantity),
-                        listId: listReference,
-                        category: category.name
-                    ) { success in
-                        if success {
-                            print("Item '\(item.name)' saved successfully.")
-                        } else {
-                            print("Failed to save item '\(item.name)'.")
-                        }
-                    }
-                }
+        createListViewModel.saveListToCloudKit(userSession: userSession, listName: listName) { success in
+            if let success = success { // Check if the optional value is not nil
+                print("List saved successfully with ID: \(success.recordName).")
+            } else {
+                print("Failed to save the list.")
             }
         }
+
 
         // Clear input fields
         newItem = ""
@@ -318,6 +304,8 @@ struct ListView: View {
     }
 }
 
+
+
 enum ReminderInterval {
     case weekly, biweekly, threeWeeks, monthly
 }
@@ -334,15 +322,14 @@ struct ListView_Previews: PreviewProvider {
                 GroceryItem(name: "Banana", quantity: 3)
             ])
         ]
-        
+
         let mockListID = CKRecord.ID(recordName: "mockRecordID")
         let mockListName = "Sample List"
-        
-        let createListViewModel = CreateListViewModel(userSession: UserSession.shared)
-        
-        ListView(categories: groceryItems, listID: mockListID, listName: mockListName, createListViewModel: createListViewModel)
+
+        ListView(categories: groceryItems, listID: mockListID, listName: mockListName, userSession: UserSession.shared)
             .environmentObject(UserSession.shared)
             .environment(\.layoutDirection, .rightToLeft)
             .previewLayout(.sizeThatFits)
     }
 }
+

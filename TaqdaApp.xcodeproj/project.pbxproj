@@ -43,6 +43,7 @@
 		5A6BC7C52CE741BB004FEC9C /* CloudSharingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7C42CE741BB004FEC9C /* CloudSharingController.swift */; };
 		5A6BC7CC2CE76959004FEC9C /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6BC7CB2CE76959004FEC9C /* ListView.swift */; };
 		EE2ABA1A2CE945F300464D4E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2ABA192CE945F300464D4E /* ViewController.swift */; };
+		EE2ABA1C2CE95FD500464D4E /* UnifiedListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2ABA1B2CE95FD500464D4E /* UnifiedListViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +103,7 @@
 		5A6BC7C82CE74DF9004FEC9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		5A6BC7CB2CE76959004FEC9C /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		EE2ABA192CE945F300464D4E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		EE2ABA1B2CE95FD500464D4E /* UnifiedListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnifiedListViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,6 +217,7 @@
 				5A6BC7962CE6B412004FEC9C /* CreateListViewModel.swift */,
 				EE2ABA192CE945F300464D4E /* ViewController.swift */,
 				5A6BC7982CE6B439004FEC9C /* ListViewModel.swift */,
+				EE2ABA1B2CE95FD500464D4E /* UnifiedListViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -406,6 +409,7 @@
 				5A6BC7832CE6B079004FEC9C /* OnboardingView.swift in Sources */,
 				5A6BC78C2CE6B354004FEC9C /* CloudKitUtility.swift in Sources */,
 				5A6BC7A62CE6B5E4004FEC9C /* MainTabView.swift in Sources */,
+				EE2ABA1C2CE95FD500464D4E /* UnifiedListViewModel.swift in Sources */,
 				5A6BC77C2CE6AF80004FEC9C /* SplashScreenView.swift in Sources */,
 				5A6BC7972CE6B412004FEC9C /* CreateListViewModel.swift in Sources */,
 				5A6BC7C52CE741BB004FEC9C /* CloudSharingController.swift in Sources */,

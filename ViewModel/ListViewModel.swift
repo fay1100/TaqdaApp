@@ -12,24 +12,27 @@ import CloudKit
 
 class ListViewModel: ObservableObject {
     @Published var categories: [GroceryCategory]
-    @Published var share: CKShare?
-    @Published var isSharingAvailable: Bool = false
-    @Published var items: [Item] = []
-    @Published var itemCount: Int = 0 // To store the item count for the list
+      @Published var share: CKShare?
+      @Published var isSharingAvailable: Bool = false
+      @Published var items: [Item] = []
+      @Published var itemCount: Int = 0
+      @Published var listName: String = "Unnamed List"
+      @Published var isListComplete: Bool = false
+      @Published var currentListID: CKRecord.ID? = nil
 
     private var createListViewModel: CreateListViewModel
 
     // Properties for managing sharing
     private var listID: CKRecord.ID?
-    private var listName: String?
-
+  
+ 
     init(categories: [GroceryCategory], listID: CKRecord.ID?, listName: String?, createListViewModel: CreateListViewModel) {
         self.categories = categories
         self.listID = listID
-        self.listName = listName ?? "Unnamed List"  // set a default value if listName is nil
+        self.listName = listName ?? "Unnamed List"
         self.createListViewModel = createListViewModel
     }
-
+    
     // Manage item quantities
     func increaseQuantity(for categoryIndex: Int, itemIndex: Int) {
         categories[categoryIndex].items[itemIndex].quantity += 1
@@ -191,11 +194,11 @@ class ListViewModel: ObservableObject {
         }
     }
     
-    var isListComplete: Bool {
-        categories.allSatisfy { category in
-            category.items.allSatisfy { $0.isSelected }
-        }
-    }
+//    var isListComplete: Bool {
+//        categories.allSatisfy { category in
+//            category.items.allSatisfy { $0.isSelected }
+//        }
+//    }
     func toggleCategorySelection(for categoryIndex: Int) {
         let allSelected = categories[categoryIndex].items.allSatisfy { $0.isSelected }
         categories[categoryIndex].items.indices.forEach { itemIndex in
