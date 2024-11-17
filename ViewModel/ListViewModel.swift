@@ -134,6 +134,45 @@ class ListViewModel: ObservableObject {
             }
         }
     }
+    func fetchItems(for listID: CKRecord.ID, completion: @escaping (Bool) -> Void) {
+        let listReference = CKRecord.Reference(recordID: listID, action: .none)
+        let predicate = NSPredicate(format: "listId == %@", listReference)
+        let query = CKQuery(recordType: "Item", predicate: predicate)
+
+        CKContainer.default().publicCloudDatabase.perform(query, inZoneWith: nil) { records, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("Error fetching items: \(error.localizedDescription)")
+                    completion(false)
+                } else if let records = records {
+                    // Convert CKRecord to Item and categorize them
+                    let items = records.map { Item(record: $0) }
+                    self.categories = self.categorizeItems(items)
+                    completion(true)
+                }
+            }
+        }
+    }
+
+    private func categorizeItems(_ items: [Item]) -> [GroceryCategory] {
+        // Group items by their category
+        var categoryDict: [String: [GroceryItem]] = [:]
+        
+        for item in items {
+            // Map `Item` to `GroceryItem`
+            let groceryItem = GroceryItem(
+                name: item.nameItem,
+                quantity: Int(item.numberOfItem),
+                isSelected: false // Assuming default state
+            )
+            categoryDict[item.category, default: []].append(groceryItem)
+        }
+
+        // Convert the dictionary into an array of GroceryCategory objects
+        return categoryDict.map { GroceryCategory(name: $0.key, items: $0.value) }
+    }
+
+
 
     // Reorder categories
     private func reorderCategories() {

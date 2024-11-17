@@ -107,7 +107,7 @@ struct GroceryListView: View {
                         .font(.system(size: 30))
                 }
                 
-            }            .frame(width: 150, height: 190)
+            }            .frame(width: 160, height: 190)
                 .background(Color("PrimaryColor"))
                 .cornerRadius(20)
             

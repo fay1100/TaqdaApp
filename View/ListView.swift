@@ -9,6 +9,7 @@ struct ListView: View {
     @ObservedObject private var viewModel: ListViewModel
     @State private var showAlert = false
     @State private var isNotificationPermissionGranted = false
+    @State private var listID: CKRecord.ID?
 
     @ObservedObject private var createListViewModel: CreateListViewModel
     @State private var listName: String
@@ -230,23 +231,70 @@ struct ListView: View {
         }
         .navigationBarBackButtonHidden(true)
     }
-
     private func addNewItem() {
         guard !listName.isEmpty else {
             print("List name is required.")
             return
         }
 
-        createListViewModel.saveListToCloudKit(userSession: userSession, listName: listName) { success in
-            if let success = success {
-                print("List saved successfully with ID: \(success.recordName).")
-            } else {
-                print("Failed to save the list.")
+        guard !newItem.isEmpty else {
+            print("Item name is required.")
+            return
+        }
+
+        // Check if the list already exists
+        if let existingListID = listID {
+            // Update the existing list by adding a new item
+            let listReference = CKRecord.Reference(recordID: existingListID, action: .none)
+            createListViewModel.saveItem(
+                name: newItem,
+                quantity: 1,
+                listId: listReference,
+                category: "Uncategorized" // Default category
+            ) { success in
+                if success {
+                    print("Item '\(newItem)' added to existing list successfully.")
+                    // Refresh items for the list
+                    self.viewModel.fetchItems(for: existingListID) { _ in
+                        print("Items refreshed.")
+                    }
+                } else {
+                    print("Failed to add item '\(newItem)' to existing list.")
+                }
+            }
+        } else {
+            // Create a new list and then add the item
+            createListViewModel.saveListToCloudKit(userSession: userSession, listName: listName) { newListID in
+                guard let newListID = newListID else {
+                    print("Failed to create a new list.")
+                    return
+                }
+
+                print("New list created successfully with ID: \(newListID).")
+
+                let listReference = CKRecord.Reference(recordID: newListID, action: .none)
+                createListViewModel.saveItem(
+                    name: newItem,
+                    quantity: 1,
+                    listId: listReference,
+                    category: "Uncategorized"
+                ) { success in
+                    if success {
+                        print("Item '\(newItem)' added to new list successfully.")
+                        self.listID = newListID // Update the listID to the new one
+                        self.viewModel.fetchItems(for: newListID) { _ in
+                            print("Items fetched for new list.")
+                        }
+                    } else {
+                        print("Failed to add item '\(newItem)' to new list.")
+                    }
+                }
             }
         }
 
-        newItem = ""
+        newItem = "" // Clear the input field
     }
+
 
     private func requestNotificationPermission(completion: @escaping (Bool) -> Void) {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
