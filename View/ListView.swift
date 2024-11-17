@@ -4,6 +4,7 @@ import UserNotifications
 
 struct ListView: View {
     @Environment(\.layoutDirection) var layoutDirection
+    @Environment(\.presentationMode) var presentationMode
     @State private var navigateToMainTab = false
     @ObservedObject private var viewModel: ListViewModel
     @State private var showAlert = false
@@ -31,11 +32,7 @@ struct ListView: View {
             VStack {
                 HStack {
                     Button(action: {
-                        if viewModel.isListComplete {
-                            navigateToMainTab = true
-                        } else {
-                            showAlert = true
-                        }
+                        presentationMode.wrappedValue.dismiss() // زر العودة للصفحة السابقة
                     }) {
                         ZStack {
                             Circle()
@@ -241,15 +238,13 @@ struct ListView: View {
         }
 
         createListViewModel.saveListToCloudKit(userSession: userSession, listName: listName) { success in
-            if let success = success { // Check if the optional value is not nil
+            if let success = success {
                 print("List saved successfully with ID: \(success.recordName).")
             } else {
                 print("Failed to save the list.")
             }
         }
 
-
-        // Clear input fields
         newItem = ""
     }
 
@@ -304,14 +299,12 @@ struct ListView: View {
     }
 }
 
-
-
 enum ReminderInterval {
     case weekly, biweekly, threeWeeks, monthly
 }
+
 struct ListView_Previews: PreviewProvider {
     static var previews: some View {
-        // Create mock data for testing
         let groceryItems: [GroceryCategory] = [
             GroceryCategory(name: "Bakery", items: [
                 GroceryItem(name: "Bread", quantity: 2),
@@ -332,4 +325,3 @@ struct ListView_Previews: PreviewProvider {
             .previewLayout(.sizeThatFits)
     }
 }
-

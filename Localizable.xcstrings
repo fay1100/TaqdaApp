@@ -363,9 +363,6 @@
     "Hello, world!" : {
 
     },
-    "Hello, World!" : {
-
-    },
     "Items 🛒" : {
       "localizations" : {
         "ar" : {
@@ -513,6 +510,9 @@
           }
         }
       }
+    },
+    "Notification" : {
+
     },
     "Organize your grocery items using AI-powered categorization sorting them by category." : {
       "localizations" : {

@@ -79,9 +79,9 @@ struct GroceryListView: View {
                     .padding(.bottom,50)
                 
                 HStack {
-                    Image(systemName: "person.circle.fill")
-                        .foregroundColor(.white)
-                        .font(.system(size: 30))
+//                    Image(systemName: "person.circle.fill")
+//                        .foregroundColor(.white)
+//                        .font(.system(size: 30))
                     
                     Button(action: {
                         isHeartSelected.toggle()
@@ -102,11 +102,15 @@ struct GroceryListView: View {
                             }
                         }
                     }
+                    Image(systemName: "person.circle.fill")
+                        .foregroundColor(.white)
+                        .font(.system(size: 30))
                 }
                 
             }            .frame(width: 150, height: 190)
                 .background(Color("PrimaryColor"))
                 .cornerRadius(20)
+            
             
 //            HStack {
 //                ZStack {

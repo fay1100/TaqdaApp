@@ -76,11 +76,12 @@ struct ListsView: View {
                 .padding(.vertical, 12)
         }
         .background(Color("CircleColor"))
-        .cornerRadius(90)
+        .cornerRadius(8)
         .overlay(
-            RoundedRectangle(cornerRadius: 90)
-                .stroke(Color("strokeColor").opacity(0.3), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(Color.gray.opacity(0.20), lineWidth: 0.1)
         )
+        
         .padding(.horizontal)
         .padding(.vertical)
     }
@@ -130,7 +131,7 @@ struct ListsView: View {
 
     var listView: some View {
         ScrollView {
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 5) {
                 NavigationLink(destination:ListView(
                     categories: viewModel.categorizedProducts,
                            listID: selectedList?.recordID,
@@ -138,8 +139,10 @@ struct ListsView: View {
                            userSession: userSession)) {
                     ZStack {
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(Color("PrimaryColor"))
+                            .fill(Color("Color+"))
                             .frame(width: 150, height: 190)
+                            .cornerRadius(20)
+
                         Image(systemName: "plus")
                             .resizable()
                             .frame(width: 24, height: 24)
@@ -243,7 +246,7 @@ struct ListsView: View {
             } else {
                 ZStack {
                     Circle()
-                        .fill(Color("CircleColor")) // جعل الدائرة ممتلئة بلون
+                        .fill(Color("CircleColor")) 
                         .frame(width: 50, height: 50)
                     Image(systemName: "person.fill")
                         .resizable()
