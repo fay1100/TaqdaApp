@@ -11,6 +11,7 @@ struct ListsView: View {
     @State private var isNavigatingToList = false
     @State private var showNotificationView = false
     @State private var isHeartSelected: [Bool] = []
+    @State private var showSignInView = false // حالة التحكم بعرض SignInView
 
     @Environment(\.layoutDirection) var layoutDirection
     @EnvironmentObject var userSession: UserSession
@@ -93,41 +94,48 @@ struct ListsView: View {
                 .foregroundColor(Color("titleColor"))
                 .fontWeight(.medium)
 
-            
             HStack {
                 if userSession.checkIfUserIsSignedIn() {
-                    NavigationLink(destination:ListView( 
+                    NavigationLink(destination: ListView(
                         categories: viewModel.categorizedProducts,
-                               listID: selectedList?.recordID,
-                               listName: selectedList?.listName,
-                               userSession: userSession)) {
+                        listID: selectedList?.recordID,
+                        listName: selectedList?.listName,
+                        userSession: userSession
+                    )) {
                         ZStack {
                             RoundedRectangle(cornerRadius: 8)
                                 .fill(Color("PrimaryColor"))
                                 .frame(width: 207, height: 40)
-                        
+
                             Text("+ Tap to start")
                                 .frame(width: 207, height: 40)
                                 .foregroundColor(Color.white)
                         }
                     }
                 } else {
-                    NavigationLink(destination: SignInView(userSession: UserSession.shared)) {
+                    Button(action: {
+                        showSignInView.toggle() // عرض واجهة تسجيل الدخول
+                    }) {
                         ZStack {
                             RoundedRectangle(cornerRadius: 8)
                                 .fill(Color("PrimaryColor"))
                                 .frame(width: 207, height: 40)
                                 .shadow(color: .gray.opacity(0.3), radius: 5, x: 0, y: 5)
-                        
-                                  Text("+ Tap to start")
+
+                            Text("+ Tap to start")
                                 .frame(width: 207, height: 40)
-                                .foregroundColor(Color .white)
+                                .foregroundColor(Color.white)
                         }
+                    }
+                    .fullScreenCover(isPresented: $showSignInView) {
+                        SignInView(userSession: userSession)
+                            .environmentObject(userSession)
                     }
                 }
             }
         }
     }
+
 
     var listView: some View {
         ScrollView {

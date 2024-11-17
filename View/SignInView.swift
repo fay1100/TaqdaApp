@@ -3,6 +3,7 @@ import AuthenticationServices
 import Combine
 
 class UserSession: ObservableObject {
+    @Published var showSignInView: Bool = false
     static let shared = UserSession() // Singleton instance
     @Published var userID: String? {
         didSet {
@@ -130,9 +131,9 @@ struct SignInView: View {
             .navigationBarBackButtonHidden(true) // إخفاء زر الباك الافتراضي
 
             .navigationBarItems(leading: Button(action: { dismiss() }) {
-                Image(systemName: layoutDirection == .rightToLeft ? "chevron.right" : "chevron.left")
+                Image(systemName: layoutDirection == .rightToLeft ? "xmark" : "xmark")
                     .resizable()
-                    .frame(width: 7, height: 12)
+                    .frame(width: 12, height: 12)
                     .foregroundColor(viewModel.isBellTapped ? .white : Color("PrimaryColor"))
                     .background(
                         Circle()

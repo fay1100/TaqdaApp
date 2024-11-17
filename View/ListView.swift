@@ -87,7 +87,7 @@ struct ListView: View {
                     Spacer()
 
                     Menu {
-                        Button("In 10 Minutes", action: { scheduleReminder(interval: .tenMinutes) })
+//                        Button("In 10 Minutes", action: { scheduleReminder(interval: .tenMinutes) })
                         Button("Every Week", action: { scheduleReminder(interval: .weekly) })
                         Button("Every Two Weeks", action: { scheduleReminder(interval: .biweekly) })
                         Button("Every Three Weeks", action: { scheduleReminder(interval: .threeWeeks) })

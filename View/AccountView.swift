@@ -2,37 +2,30 @@ import SwiftUI
 import CloudKit
 import Combine
 import AuthenticationServices
+
 class CloudKitUserBootcampViewModel: ObservableObject {
-     var userSession: UserSession
+    var userSession: UserSession
     @Published var permissionStatus: Bool = false
     @Published var isSignedInToiCloud: Bool = false
     @Published var error: String = ""
     @Published var userName: String = ""
     @Published var profileImage: UIImage? = nil
-    @Published var isLoggedIn: Bool = true // Managing login state here
+    @Published var isLoggedIn: Bool = false // إدارة حالة تسجيل الدخول
     
-    let container = CKContainer(identifier: "iCloud.FaizahApp")    
+    let container = CKContainer(identifier: "iCloud.FaizahApp")
     var cancellables = Set<AnyCancellable>()
-//
-//    init() {
-//        getiCloudStatus()
-//        requestPermission()
-//        getCurrentUserName()
-//    }
-//
     
     init(userSession: UserSession) {
         self.userSession = userSession
         getiCloudStatus()
         requestPermission()
         
-        // تحقق مما إذا كان المستخدم مسجل الدخول قبل استدعاء getCurrentUserName()
-        if userSession.userID != nil {
+        if let userID = userSession.userID {
+            isLoggedIn = true // ضبط الحالة بناءً على الجلسة
             getCurrentUserName()
             fetchUserProfileImage()
         }
     }
-
     
     private func getiCloudStatus() {
         CloudKitUtility.getiCloudStatus()
@@ -64,226 +57,147 @@ class CloudKitUserBootcampViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { _ in } receiveValue: { [weak self] returnedName in
                 self?.userName = returnedName
-                print("name.. \(returnedName)")
             }
             .store(in: &cancellables)
     }
     
     func fetchUserProfileImage() {
-               guard let userID = userSession.userID else {
-                   print("User ID is not available.")
-                   return
-               }
-               
-               // Use the userID from userSession to create a predicate
-               let predicate = NSPredicate(format: "user_id == %@", userID)
-               let query = CKQuery(recordType: "User", predicate: predicate)
-               let queryOperation = CKQueryOperation(query: query)
-               
-               queryOperation.recordFetchedBlock = { [weak self] record in
-                   DispatchQueue.main.async {
-                       if let imageAsset = record["profileImage"] as? CKAsset, let fileURL = imageAsset.fileURL {
-                           if let data = try? Data(contentsOf: fileURL), let image = UIImage(data: data) {
-                               self?.profileImage = image
-                           } else {
-                               print("Failed to load image data")
-                           }
-                       } else {
-                           print("No profile image found")
-                       }
-                   }
-               }
-               
-               queryOperation.queryCompletionBlock = { [weak self] _, error in
-                   if let error = error {
-                       print("Error fetching profile image: \(error.localizedDescription)")
-                       DispatchQueue.main.async {
-                           self?.error = error.localizedDescription
-                       }
-                   }
-               }
-               
-               container.publicCloudDatabase.add(queryOperation)
-           }
+        guard let userID = userSession.userID else {
+            return
+        }
+        
+        let predicate = NSPredicate(format: "user_id == %@", userID)
+        let query = CKQuery(recordType: "User", predicate: predicate)
+        let queryOperation = CKQueryOperation(query: query)
+        
+        queryOperation.recordFetchedBlock = { [weak self] record in
+            DispatchQueue.main.async {
+                if let imageAsset = record["profileImage"] as? CKAsset, let fileURL = imageAsset.fileURL {
+                    if let data = try? Data(contentsOf: fileURL), let image = UIImage(data: data) {
+                        self?.profileImage = image
+                    }
+                }
+            }
+        }
+        
+        queryOperation.queryCompletionBlock = { [weak self] _, error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    self?.error = error.localizedDescription
+                }
+            }
+        }
+        
+        container.publicCloudDatabase.add(queryOperation)
+    }
     
     func logoutUser() {
-        print("Logging out...")
-        userName = "" // مسح اسم المستخدم
+        userName = ""
         profileImage = nil
         isLoggedIn = false
-        userSession.logout() // مسح بيانات جلسة المستخدم
+        userSession.logout()
     }
-
-
 }
 
 struct AccountView: View {
     @Environment(\.colorScheme) var colorScheme
-        @State private var isDarkMode: Bool = false
-        @StateObject private var vm: CloudKitUserBootcampViewModel
-        @State private var selectedImage: UIImage?
-        @State private var isPickerPresented = false
-        @EnvironmentObject var userSession: UserSession
-        init(userSession: UserSession) {
-               _vm = StateObject(wrappedValue: CloudKitUserBootcampViewModel(userSession: userSession))
-           }
+    @State private var isDarkMode: Bool = false
+    @State private var showSignInView: Bool = false // حالة للتحكم في عرض واجهة تسجيل الدخول
+    @StateObject private var vm: CloudKitUserBootcampViewModel
+    @EnvironmentObject var userSession: UserSession
+
+    init(userSession: UserSession) {
+        _vm = StateObject(wrappedValue: CloudKitUserBootcampViewModel(userSession: userSession))
+    }
+
     var body: some View {
         NavigationStack {
-            Group {
-                if vm.isLoggedIn {
-                    ZStack {
-                        Color("backgroundApp")
-                            .ignoresSafeArea()                            .ignoresSafeArea()
+            accountDetailsView
+        }
+        .onAppear {
+            if vm.isLoggedIn {
+                vm.fetchUserProfileImage()
+            }
+        }
+        .fullScreenCover(isPresented: $showSignInView) {
+            SignInView(userSession: userSession)
+                .environmentObject(userSession)
+        }
+    }
 
-//                        Image("Background")
-//                            .resizable()
-//                            .ignoresSafeArea()
-                        
-                        VStack {
-                            VStack(spacing: 8) {
-                                ZStack{
-                                    Circle()
-                                        .stroke(Color("CircleColor"), lineWidth: 8)
-                                        .frame(width: 120, height: 120)
-                                    
-                                    if let profileImage = vm.profileImage {
-                                        Image(uiImage: profileImage)
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width: 100, height: 100)
-                                            .clipShape(Circle())
-                                    } else {
-                                        Image(systemName: "person.fill")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 60, height: 60)
-                                            .foregroundColor(Color("ColorPer"))
-                                    }
-                                }
-        
-                                TextField("Username", text: $vm.userName)
-                                    .font(.largeTitle)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color("NameColor"))
-                                    .multilineTextAlignment(.center)
-                                
-//                                Text("@\(vm.userName)")
-//                                    .foregroundColor(Color.gray)
-//                                    .font(.subheadline)
-                            }
-                            .padding(.top, 70)
-                            
-                            Spacer().frame(height: 40)
-                            
-                            VStack(spacing: 0) {
-                                SettingRow(icon: "globe", title: NSLocalizedString("Language", comment: ""), iconColor: Color("PrimaryColor"), textColor: Color("titleColor")) {
-                                    openAppSettings()
-                                }
-                                Divider()
-                                
-                                SettingRow(icon: colorScheme == .dark ? "sun.max" : "moon",
-                                           title: colorScheme == .dark ? NSLocalizedString("Light Mode", comment: "") : NSLocalizedString("Dark Mode", comment: ""),
-                                           iconColor: Color("PrimaryColor"), textColor: Color("titleColor")) {
-                                    isDarkMode.toggle()
-                                    UIApplication.shared.windows.first?.overrideUserInterfaceStyle = isDarkMode ? .dark : .light
-                                }
-                                Divider()
-                                
-                                SettingRow(icon: "rectangle.portrait.and.arrow.right", title: NSLocalizedString("Log out", comment: ""), iconColor: Color("red22"), textColor: Color("red22")) {
-                                    vm.logoutUser()
-                                    vm.isLoggedIn = false // تعيين isLoggedIn إلى false لنقل المستخدم إلى loggedOutView
-                                }
-
-                            }.padding(.top,50)
-                            
-                            Spacer()
-                        }
-                    }
-                    .onAppear {
-                        vm.fetchUserProfileImage()
-                    }
-                } else {
-                    loggedOutView
-                }
+    var accountDetailsView: some View {
+        ZStack {
+            Color("backgroundApp")
+                .ignoresSafeArea()
+            
+            VStack {
+                profileSection
+                settingsSection
+                Spacer()
             }
         }
     }
-    
-    var loggedOutView: some View {
-        ZStack {
-            Color("backgroundAppColor")
-                .ignoresSafeArea()
-            
-            Image("Background")
-                .resizable()
-                .ignoresSafeArea()
-            
-            VStack(spacing: 8) {
-                ZStack {
-                    Circle()
-                        .stroke(Color("GreenLight"), lineWidth: 4)
-                        .frame(width: 120, height: 120)
-                    
-                    Image(systemName: "person.fill.questionmark")
+
+    var profileSection: some View {
+        VStack(spacing: 8) {
+            ZStack {
+                Circle()
+                    .stroke(Color("CircleColor"), lineWidth: 8)
+                    .frame(width: 120, height: 120)
+                
+                if let profileImage = vm.profileImage {
+                    Image(uiImage: profileImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 100, height: 100)
+                        .clipShape(Circle())
+                } else {
+                    Image(systemName: "person.fill")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 70, height: 70)
-                        .foregroundColor(Color("buttonColor"))
+                        .frame(width: 60, height: 60)
+                        .foregroundColor(Color("ColorPer"))
                 }
-                .padding(.top, 40)
-                
-                Text("You do not have an account yet")
-                    .font(.system(size: 18))
-                    .fontWeight(.bold)
-                    .foregroundColor(Color("GreenDark"))
-                    .padding(.top, 20)
-                
-                Text("Create new account now")
-                    .foregroundColor(Color("buttonColor"))
-                    .fontWeight(.bold)
-                    .font(.subheadline)
-                    .padding(.top, 20)
-                
-                SignInWithAppleButton(
-                    onRequest: { request in
-                        request.requestedScopes = [.fullName, .email]
-                    },
-                    onCompletion: { result in
-                        switch result {
-                        case .success(let authorization):
-                            handleAuthorization(authorization)
-                        case .failure(let error):
-                            print("Sign in with Apple failed: \(error.localizedDescription)")
-                        }
-                    }
-                )
-                .frame(width: 342, height: 54)
-                .cornerRadius(14)
-                .padding(.top, 20)
-                .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
-                .accessibilityLabel("Sign in with Apple")
-                .accessibilityHint("Use your Apple ID to sign in")
             }
-            .padding(.bottom,250)
+            TextField("Username", text: $vm.userName)
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .foregroundColor(Color("NameColor"))
+                .multilineTextAlignment(.center)
         }
+        .padding(.top, 70)
     }
-    
-    func handleAuthorization(_ authorization: ASAuthorization) {
-        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
-            let userIdentifier = appleIDCredential.user
-            let fullName = appleIDCredential.fullName
-            let email = appleIDCredential.email
-            
-            print("User ID: \(userIdentifier)")
-            if let name = fullName {
-                print("User Name: \(name.givenName ?? "") \(name.familyName ?? "")")
+
+    var settingsSection: some View {
+        VStack(spacing: 0) {
+            SettingRow(icon: "globe", title: NSLocalizedString("Language", comment: ""), iconColor: Color("PrimaryColor"), textColor: Color("titleColor")) {
+                openAppSettings()
             }
-            if let email = email {
-                print("User Email: \(email)")
+            Divider()
+
+            SettingRow(icon: colorScheme == .dark ? "sun.max" : "moon",
+                       title: colorScheme == .dark ? NSLocalizedString("Light Mode", comment: "") : NSLocalizedString("Dark Mode", comment: ""),
+                       iconColor: Color("PrimaryColor"), textColor: Color("titleColor")) {
+                isDarkMode.toggle()
+                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = isDarkMode ? .dark : .light
             }
-            
-            vm.isLoggedIn = true
+            Divider()
+
+            SettingRow(
+                icon: vm.isLoggedIn ? "rectangle.portrait.and.arrow.right" : "person.fill",
+                title: vm.isLoggedIn ? "Log Out" : "Sign In",
+                iconColor: vm.isLoggedIn ? Color.red22: Color.PrimaryColor , // لون الأيقونة
+                 textColor: vm.isLoggedIn ? Color.red22 : Color.titleColor // لون النص
+            ) {
+                if vm.isLoggedIn {
+                    vm.logoutUser()
+                    print("User logged out")
+                } else {
+                    showSignInView.toggle() // عرض واجهة تسجيل الدخول باستخدام fullScreenCover
+                }
+            }
         }
+        .padding(.top, 50)
     }
 
     func openAppSettings() {
@@ -321,9 +235,17 @@ struct SettingRow: View {
     }
 }
 
+
+extension Color {
+//    static let red22 = Color("red22") // يجب أن تكون مضافة في Assets
+    static let titleColor = Color("titleColor") // يجب أن تكون مضافة في Assets
+    static let PrimaryColor = Color("PrimaryColor") // يجب أن تكون مضافة في Assets
+}
+
+
 struct AccountView_Previews: PreviewProvider {
     static var previews: some View {
-        AccountView(userSession: UserSession.shared) // Use the singleton instance
-            .environmentObject(UserSession.shared) // Inject UserSession into the environment
+        AccountView(userSession: UserSession.shared)
+            .environmentObject(UserSession.shared)
     }
 }

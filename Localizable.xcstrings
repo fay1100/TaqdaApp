@@ -91,6 +91,7 @@
       }
     },
     "Create new account now" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -370,9 +371,6 @@
     "Hello, world!" : {
 
     },
-    "In 10 Minutes" : {
-
-    },
     "Items 🛒" : {
       "localizations" : {
         "ar" : {
@@ -453,7 +451,25 @@
         }
       }
     },
+    "Log in" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تسجيل الدخول "
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log in"
+          }
+        }
+      }
+    },
     "Log out" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -508,6 +524,12 @@
             "state" : "translated",
             "value" : "التالي"
           }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
         }
       }
     },
@@ -517,6 +539,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "التالي"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next Step"
           }
         }
       }
@@ -528,6 +556,12 @@
             "state" : "translated",
             "value" : "لا يوجد اشعارات "
           }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Notifications"
+          }
         }
       }
     },
@@ -537,6 +571,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "الاشعارات"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notification"
           }
         }
       }
@@ -737,6 +777,7 @@
       "comment" : "Prompt for the user to write their list"
     },
     "You do not have an account yet" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
