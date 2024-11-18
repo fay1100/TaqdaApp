@@ -12,15 +12,29 @@ struct ListsView: View {
     @State private var showNotificationView = false
     @State private var isHeartSelected: [Bool] = []
     @State private var showSignInView = false // حالة التحكم بعرض SignInView
+    @ObservedObject private var listViewModel: ListViewModel
 
     @Environment(\.layoutDirection) var layoutDirection
     @EnvironmentObject var userSession: UserSession
 
-    init() {
+    init(
+        categories: [GroceryCategory] = [],
+        listID: CKRecord.ID? = nil,
+        listName: String? = nil
+    ) {
         let userSession = UserSession.shared
         _vm = StateObject(wrappedValue: CloudKitUserBootcampViewModel(userSession: userSession))
         _viewModel = StateObject(wrappedValue: CreateListViewModel(userSession: userSession))
+        
+        // Initialize listViewModel
+        self.listViewModel = ListViewModel(
+            categories: categories,
+            listID: listID,
+            listName: listName ?? "Unnamed List",
+            createListViewModel: CreateListViewModel(userSession: userSession)
+        )
     }
+
     
     var body: some View {
         NavigationStack {
@@ -163,37 +177,39 @@ struct ListsView: View {
                 
                 // عرض القوائم
                 ForEach(filteredLists, id: \.listId) { list in
-                    ZStack {
-                        GroceryListView(
-                            listName: list.listName,
-                            isHeartSelected: bindingForHeartSelected(
-                                at: viewModel.lists.firstIndex(where: { $0.listId == list.listId }) ?? 0
-                            ),
-                            onHeartTapped: {
-                                toggleFavoriteStatus(for: list)
-                            }
-                        )
-                        .padding()
-                        .background(Color("bakgroundTap"))
-                        .cornerRadius(8)
-                    }
-                    .onTapGesture {
-                        navigateToList(list)
-                    }
-                }
+                                    ZStack {
+                                        GroceryListView(
+                                            listName: list.listName,
+                                            isHeartSelected: bindingForHeartSelected(
+                                                at: viewModel.lists.firstIndex(where: { $0.listId == list.listId }) ?? 0
+                                            ),
+                                            onHeartTapped: {
+                                                toggleFavoriteStatus(for: list)
+                                            }
+                                        )
+                                        .padding()
+                                        .background(Color("bakgroundTap"))
+                                        .cornerRadius(8)
+                                    }
+                                    .onTapGesture {
+                                        navigateToList(list)
+                                    }
+                                }
             }
             .padding(.horizontal)
         }
         .background(
-            NavigationLink(
+            NavigationLink(// for fetch
                 destination: ListView(
-                    categories: viewModel.categorizedProducts,
+                    categories: listViewModel.categories,
                     listID: selectedList?.recordID,
                     listName: selectedList?.listName,
                     userSession: userSession
                 ),
                 isActive: $isNavigatingToList
             ) { EmptyView() }
+
+
         )
     }
 
@@ -235,11 +251,27 @@ struct ListsView: View {
     }
 
 
-
     private func navigateToList(_ list: List) {
         selectedList = list
-        isNavigatingToList = true
+
+        // Unwrap the recordID safely
+        guard let recordID = list.recordID else {
+            print("Record ID is nil for the selected list.")
+            return
+        }
+
+        listViewModel.fetchItems(for: recordID) { success in
+            if success {
+                print("Items fetched for list: \(list.listName)")
+                DispatchQueue.main.async {
+                    isNavigatingToList = true
+                }
+            } else {
+                print("Failed to fetch items for list: \(list.listName)")
+            }
+        }
     }
+
 
     private var filteredLists: [List] {
         if searchText.isEmpty {
@@ -336,7 +368,7 @@ extension Array {
 
 struct ListsView_Previews: PreviewProvider {
     static var previews: some View {
-        ListsView()
+        ListsView() // 
             .environmentObject(UserSession.shared)
             .previewDisplayName("ListsView Preview")
     }

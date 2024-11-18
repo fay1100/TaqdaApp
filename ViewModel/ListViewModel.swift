@@ -139,27 +139,44 @@ class ListViewModel: ObservableObject {
         }
     }
     func fetchItems(for listID: CKRecord.ID, completion: @escaping (Bool) -> Void) {
+        // استخدام CloudKit container
+        let database = CKContainer.default().publicCloudDatabase
         let listReference = CKRecord.Reference(recordID: listID, action: .none)
         let predicate = NSPredicate(format: "listId == %@", listReference)
         let query = CKQuery(recordType: "Item", predicate: predicate)
 
-        CKContainer.default().publicCloudDatabase.perform(query, inZoneWith: nil) { records, error in
+        database.perform(query, inZoneWith: nil) { [weak self] (records: [CKRecord]?, error: Error?) in
             DispatchQueue.main.async {
                 if let error = error {
                     print("Error fetching items: \(error.localizedDescription)")
                     completion(false)
                 } else if let records = records {
-                    // Map CKRecords to items and update categories
-                    let items = records.map { Item(record: $0) }
-                    self.categories = self.categorizeItems(items)
+                    print("Records fetched: \(records.count) items found.")
+                    
+                    // تحويل السجلات إلى عناصر وتصنيفها
+                    let fetchedItems = records.map { Item(record: $0) }
+                    
+                    // تأكد من أن الخاصية 'categorizedProducts' موجودة أو استخدم خاصية صحيحة
+                    self?.categories = self?.categorizeItems(fetchedItems) ?? []
+                    
+                    print("Mapped items: \(fetchedItems)")
                     completion(true)
                 } else {
                     print("No records found.")
                     completion(false)
                 }
             }
+            if let records = records {
+                print("Records fetched: \(records.count) items found.")
+                let fetchedItems = records.map { Item(record: $0) }
+                self?.categories = self?.categorizeItems(fetchedItems) ?? []
+                print("Mapped items: \(fetchedItems)")
+                completion(true)
+            }
         }
     }
+
+
 
 
 

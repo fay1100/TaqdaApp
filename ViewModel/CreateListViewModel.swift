@@ -259,30 +259,31 @@ extension CreateListViewModel {
 //        }
 //    }
     
-    func fetchItems(for listID: CKRecord.ID, completion: @escaping (Bool) -> Void) {
-        let listReference = CKRecord.Reference(recordID: listID, action: .none)
-        let predicate = NSPredicate(format: "listId == %@", listReference)
-        let query = CKQuery(recordType: "Item", predicate: predicate)
-
-        database.perform(query, inZoneWith: nil) { [weak self] records, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    print("Error fetching items: \(error.localizedDescription)")
-                    completion(false)
-                } else if let records = records {
-                    print("Records fetched: \(records)")
-                    // Map the fetched records to `Item` instances
-                    self?.items = records.map { Item(record: $0) }
-                    print("Successfully fetched \(records.count) items for list ID \(listID).")
-                    print("Mapped items: \(self?.items ?? [])")
-                    completion(true)
-                } else {
-                    print("No records found and no error received.")
-                    completion(false)
-                }
-            }
-        }
-    }
+//    func fetchItems(for listID: CKRecord.ID, completion: @escaping (Bool) -> Void) {
+//        let listReference = CKRecord.Reference(recordID: listID, action: .none)
+//        let predicate = NSPredicate(format: "listId == %@", listReference)
+//        let query = CKQuery(recordType: "Item", predicate: predicate)
+//
+//        database.perform(query, inZoneWith: nil) { [weak self] records, error in
+//            DispatchQueue.main.async {
+//                if let error = error {
+//                    print("Error fetching items: \(error.localizedDescription)")
+//                    completion(false)
+//                } else if let records = records {
+//                    print("Records fetched: \(records)")
+//                    // Map the fetched records to `Item` instances
+//                    self?.items = records.map { Item(record: $0) }
+//                    print("Successfully fetched \(records.count) items for list ID \(listID).")
+//                    print("Mapped items: \(self?.items ?? [])")
+//                    completion(true)
+//                } else {
+//                    print("No records found and no error received.")
+//                    completion(false)
+//                }
+//            }
+//        }
+//    }
+    
 }
 
 extension CreateListViewModel {
