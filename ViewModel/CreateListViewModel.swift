@@ -59,22 +59,26 @@ class CreateListViewModel: ObservableObject {
         }
     }()
 
-
     func classifyProducts() {
         guard let model = model else {
             categorizedProducts = [GroceryCategory(name: "Model not available", items: [])]
             return
         }
         
-        let processedInput = preprocessInputWithNLP(userInput)
+        // فصل المنتجات بناءً على الأسطر
+        let lines = userInput.split(separator: "\n")
+        var products: [String] = []
         
-        let productLines = processedInput.split(separator: "\n").flatMap { line in
-            line.split(separator: ",").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+        for line in lines {
+            // تقسيم بناءً على الفاصلة سواء كانت عربية أو إنجليزية
+            let lineProducts = line.split { $0 == "," || $0 == "،" }
+                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            products.append(contentsOf: lineProducts)
         }
         
         var categoryDict: [String: [GroceryItem]] = [:]
         
-        for product in productLines {
+        for product in products {
             let correctedText = correctSpelling(for: product.lowercased())
             let (quantity, productName) = extractQuantity(from: correctedText)
             
@@ -97,9 +101,11 @@ class CreateListViewModel: ObservableObject {
             }
         }
         
+        // تحويل النتائج إلى مصفوفة من GroceryCategory
         categorizedProducts = categoryDict.map { GroceryCategory(name: $0.key, items: $0.value) }
     }
-    
+
+
     private func preprocessInputWithNLP(_ input: String) -> String {
         var processedText = input
         processedText = correctSpelling(for: processedText)

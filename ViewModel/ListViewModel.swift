@@ -226,7 +226,7 @@ class ListViewModel: ObservableObject {
             return languageCode == "ar" ? "فواكه وخضروات 🍇" : "Fruits & Vegetables 🍇"
         case "Frozen Foods":
             return languageCode == "ar" ? "أطعمة مجمدة ❄️" : "Frozen Foods ❄️"
-        case "bakery":
+        case "Bakery":
             return languageCode == "ar" ? "مخبوزات 🍞" : "Bakery 🍞"
         case "Rice, Grains & Pasta":
             return languageCode == "ar" ? "أرز وحبوب ومعكرونة 🌾" : "Rice, Grains & Pasta 🌾"

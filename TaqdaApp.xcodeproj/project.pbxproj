@@ -10,6 +10,7 @@
 		5A10BFBA2CE8185600D2AD2D /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5A10BFB92CE8185500D2AD2D /* Localizable.xcstrings */; };
 		5A10BFC52CE8BDF400D2AD2D /* On22233.gif in Resources */ = {isa = PBXBuildFile; fileRef = 5A10BFC42CE8BDF400D2AD2D /* On22233.gif */; };
 		5A10BFC62CE8BDF400D2AD2D /* On22233.gif in Resources */ = {isa = PBXBuildFile; fileRef = 5A10BFC42CE8BDF400D2AD2D /* On22233.gif */; };
+		5A10BFC82CEB2A9200D2AD2D /* TipKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A10BFC72CEB2A9200D2AD2D /* TipKit.swift */; };
 		5A22EEA82CE6750100E83596 /* TaqdaAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A22EEA72CE6750100E83596 /* TaqdaAppApp.swift */; };
 		5A22EEAA2CE6750100E83596 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A22EEA92CE6750100E83596 /* ContentView.swift */; };
 		5A22EEAC2CE6750200E83596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A22EEAB2CE6750200E83596 /* Assets.xcassets */; };
@@ -66,6 +67,7 @@
 /* Begin PBXFileReference section */
 		5A10BFB92CE8185500D2AD2D /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		5A10BFC42CE8BDF400D2AD2D /* On22233.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = On22233.gif; sourceTree = "<group>"; };
+		5A10BFC72CEB2A9200D2AD2D /* TipKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipKit.swift; sourceTree = "<group>"; };
 		5A22EEA42CE6750100E83596 /* TaqdaApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaqdaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A22EEA72CE6750100E83596 /* TaqdaAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaqdaAppApp.swift; sourceTree = "<group>"; };
 		5A22EEA92CE6750100E83596 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 				5A6BC7A52CE6B5E4004FEC9C /* MainTabView.swift */,
 				5A6BC7BC2CE740B5004FEC9C /* ListsView.swift */,
 				5A6BC7CB2CE76959004FEC9C /* ListView.swift */,
+				5A10BFC72CEB2A9200D2AD2D /* TipKit.swift */,
 				5A6BC7B82CE7401D004FEC9C /* GroceryListView.swift */,
 				5A6BC7BE2CE740DE004FEC9C /* CreateListView.swift */,
 				5A6BC7C22CE74161004FEC9C /* CustomTextField.swift */,
@@ -395,6 +398,7 @@
 				5A22EEAA2CE6750100E83596 /* ContentView.swift in Sources */,
 				5A6BC7B52CE73FF1004FEC9C /* NotificationView.swift in Sources */,
 				5A6BC79E2CE6B4A1004FEC9C /* GroceryModel.swift in Sources */,
+				5A10BFC82CEB2A9200D2AD2D /* TipKit.swift in Sources */,
 				5A6BC7A22CE6B519004FEC9C /* AccountView.swift in Sources */,
 				5A6BC78A2CE6B328004FEC9C /* CloudKitManager.swift in Sources */,
 				5A6BC7A42CE6B534004FEC9C /* SignInView.swift in Sources */,

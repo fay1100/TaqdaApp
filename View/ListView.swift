@@ -1,6 +1,7 @@
 import SwiftUI
 import CloudKit
 import UserNotifications
+import TipKit // أضف المكتبة
 
 struct ListView: View {
     @Environment(\.layoutDirection) var layoutDirection
@@ -10,7 +11,7 @@ struct ListView: View {
     @State private var showAlert = false
     @State private var isNotificationPermissionGranted = false
     @State private var listID: CKRecord.ID?
-
+let addItemTip = AddItemTip()
     @ObservedObject private var createListViewModel: CreateListViewModel
     @State private var listName: String
     @State private var newItem: String = ""
@@ -55,34 +56,30 @@ struct ListView: View {
                     TextField("Enter Name", text: $createListViewModel.listName)                        .font(.system(size: 22, weight: .bold))
                         .multilineTextAlignment(.center)
                         .foregroundColor(Color("PrimaryColor"))
+                    
                     Spacer()
-                     Menu {
+//                     Menu {
 //                        Button(action: {
-//                            viewModel.saveToFavorites()
+//                            shareList()
 //                        }) {
-//                            Label("Favorite", systemImage: "heart")
+//                            Label("Share", systemImage: "square.and.arrow.up")
 //                        }
-                        Button(action: {
-                            shareList()
-                        }) {
-                            Label("Share", systemImage: "square.and.arrow.up")
-                        }
-                        Button(action: {
-                            deleteListAndMoveToMain()
-                        }) {
-                            Label("Delete", systemImage: "trash")
-                        }
-                    } label: {
-                        ZStack {
-                            Circle()
-                                .fill(Color("CircleColor"))
-                                .frame(width: 40, height: 40)
-                            Image(systemName: "ellipsis")
-                                .resizable()
-                                .frame(width: 20, height: 4)
-                                .foregroundColor(Color("PrimaryColor"))
-                        }
-                    }
+//                        Button(action: {
+//                            deleteListAndMoveToMain()
+//                        }) {
+//                            Label("Delete", systemImage: "trash")
+//                        }
+//                    } label: {
+//                        ZStack {
+//                            Circle()
+//                                .fill(Color("CircleColor"))
+//                                .frame(width: 40, height: 40)
+//                            Image(systemName: "ellipsis")
+//                                .resizable()
+//                                .frame(width: 20, height: 4)
+//                                .foregroundColor(Color("PrimaryColor"))
+//                        }
+//                    }
               
                 }
                 .padding(.horizontal)
@@ -290,7 +287,7 @@ struct ListView: View {
                                                     }
                                                 }
                         
-                    }
+                    }.popoverTip(addItemTip)
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 15)

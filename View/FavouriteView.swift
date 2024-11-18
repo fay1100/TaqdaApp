@@ -1,4 +1,5 @@
 import SwiftUI
+import CloudKit
 
 struct FavouriteView: View {
     @StateObject private var vm: CloudKitUserBootcampViewModel
@@ -8,11 +9,26 @@ struct FavouriteView: View {
     @State private var favoriteLists: [List] = [] // القوائم المفضلة
     @State private var selectedList: List? // القائمة المحددة للتنقل
     @State private var isNavigatingToList = false // التحكم في التنقل إلى التفاصيل
+    @ObservedObject private var listViewModel: ListViewModel
 
-    init(userSession: UserSession) {
+    init(
+        categories: [GroceryCategory] = [],
+        listID: CKRecord.ID? = nil,
+        listName: String? = nil
+    ) {
+        let userSession = UserSession.shared
         _vm = StateObject(wrappedValue: CloudKitUserBootcampViewModel(userSession: userSession))
         _viewModel = StateObject(wrappedValue: CreateListViewModel(userSession: userSession))
+        
+        // Initialize listViewModel
+        self.listViewModel = ListViewModel(
+            categories: categories,
+            listID: listID,
+            listName: listName ?? "Unnamed List",
+            createListViewModel: CreateListViewModel(userSession: userSession)
+        )
     }
+
     
     var body: some View {
         NavigationStack {
@@ -90,7 +106,7 @@ struct FavouriteView: View {
         .background(
             NavigationLink(
                 destination: ListView(
-                    categories: viewModel.categorizedProducts,
+                    categories:listViewModel.categories,
                     listID: selectedList?.recordID,
                     listName: selectedList?.listName,
                     userSession: userSession
@@ -140,7 +156,7 @@ struct FavouriteView: View {
                 Circle()
                     .fill(Color("CircleColor"))
                     .frame(width: 40, height: 40)
-
+                
                 Image(systemName: "bell")
                     .resizable()
                     .frame(width: 18, height: 22)
@@ -152,7 +168,7 @@ struct FavouriteView: View {
         }
         .padding(.trailing)
     }
-
+    
     private func fetchFavoriteLists() {
         viewModel.fetchLists { success in
             if success {
@@ -164,17 +180,33 @@ struct FavouriteView: View {
             }
         }
     }
-
+    
     
     private func navigateToList(_ list: List) {
         selectedList = list
-        isNavigatingToList = true
+        
+        guard let recordID = list.recordID else {
+            print("Record ID is nil for the selected list.")
+            return
+        }
+        
+        listViewModel.fetchItems(for: recordID) { success in
+            if success {
+                print("Items fetched for list: \(list.listName)")
+                DispatchQueue.main.async {
+                    isNavigatingToList = true
+                }
+            } else {
+                print("Failed to fetch items for list: \(list.listName)")
+            }
+        }
     }
+
 }
 
 struct FavouriteView_Previews: PreviewProvider {
     static var previews: some View {
-        FavouriteView(userSession: UserSession.shared)
-            .environmentObject(UserSession.shared) 
+        FavouriteView()
+            .environmentObject(UserSession.shared)
     }
 }

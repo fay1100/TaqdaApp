@@ -59,6 +59,7 @@
 //
 
 import SwiftUI
+import TipKit
 struct DynamicTypeModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
@@ -73,14 +74,23 @@ extension View {
 }
 @main
 struct TaqdaAppApp: App {
+    
     @AppStorage("isOnboardingComplete") private var isOnboardingComplete = false
     @AppStorage("isUserSignedIn") private var isUserSignedIn = false // Check if the user is signed in
     @State private var isSplashScreenActive = true
     @StateObject private var userSession = UserSession.shared // Shared UserSession instance
     @StateObject private var viewModel = CreateListViewModel(userSession: UserSession.shared) // Use the shared session
     
+       init() {
+           // Configure TipKit on app initialization
+           try? Tips.configure([
+               .displayFrequency(.immediate),
+               .datastoreLocation(.applicationDefault)
+           ])
+       }
     var body: some Scene {
         WindowGroup {
+
             if isSplashScreenActive {
                 SplashScreenView()
                     .onAppear {

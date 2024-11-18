@@ -80,7 +80,7 @@ struct GroceryListView: View {
                 
                 HStack {
                     Button(action: {
-                        onHeartTapped() // استدعاء الوظيفة عند النقر
+                        onHeartTapped()
                     }) {
                         ZStack {
                             if isHeartSelected {
@@ -91,16 +91,19 @@ struct GroceryListView: View {
                                 Image(systemName: "heart.fill")
                                     .foregroundColor(.red)
                                     .font(.system(size: 17))
+                                
                             } else {
                                 Image(systemName: "heart.circle.fill")
                                     .foregroundColor(.white)
                                     .font(.system(size: 30))
                             }
-                        }
+                        }.padding(.trailing ,20)
                     }
                     Image(systemName: "person.circle.fill")
                         .foregroundColor(.white)
                         .font(.system(size: 30))
+                        .padding(.leading ,-20)
+                    
                 }
             }
             .frame(width: 160, height: 190)

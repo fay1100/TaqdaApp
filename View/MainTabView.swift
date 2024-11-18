@@ -12,7 +12,7 @@ struct MainTabView: View {
                     ListsView()
                         .environmentObject(UserSession.shared)
                 } else if selectedTab == 1 {
-                    FavouriteView(userSession: UserSession.shared)
+           FavouriteView()
                         .environmentObject(UserSession.shared)
                 } else {
                     AccountView(userSession: UserSession.shared)

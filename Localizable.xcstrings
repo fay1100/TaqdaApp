@@ -58,6 +58,16 @@
         }
       }
     },
+    "Add Items to Your Grocery List" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أضف العناصر إلى قائمة التسوق الخاصة بك"
+          }
+        }
+      }
+    },
     "App Icon" : {
       "localizations" : {
         "ar" : {
@@ -124,6 +134,7 @@
       }
     },
     "Delete" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -188,6 +199,7 @@
       }
     },
     "Enter list name" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -642,7 +654,18 @@
         }
       }
     },
+    "Separate items using a comma, or list each item on a new line." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "افصل العناصر باستخدام الفاصلة ، أو قم بكتابة كل عنصر في سطر جديد."
+          }
+        }
+      }
+    },
     "Share" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
