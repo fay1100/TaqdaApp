@@ -23,7 +23,7 @@ class ListViewModel: ObservableObject {
     private var createListViewModel: CreateListViewModel
 
     // Properties for managing sharing
-    private var listID: CKRecord.ID?
+    public var listID: CKRecord.ID?
   
  
     init(categories: [GroceryCategory], listID: CKRecord.ID?, listName: String?, createListViewModel: CreateListViewModel) {
@@ -32,7 +32,11 @@ class ListViewModel: ObservableObject {
         self.listName = listName ?? "Unnamed List"
         self.createListViewModel = createListViewModel
     }
-    
+    func refreshCategories(with newCategories: [GroceryCategory]) {
+          DispatchQueue.main.async {
+              self.categories = newCategories
+          }
+      }
     // Manage item quantities
     func increaseQuantity(for categoryIndex: Int, itemIndex: Int) {
         categories[categoryIndex].items[itemIndex].quantity += 1
@@ -145,14 +149,19 @@ class ListViewModel: ObservableObject {
                     print("Error fetching items: \(error.localizedDescription)")
                     completion(false)
                 } else if let records = records {
-                    // Convert CKRecord to Item and categorize them
+                    // Map CKRecords to items and update categories
                     let items = records.map { Item(record: $0) }
                     self.categories = self.categorizeItems(items)
                     completion(true)
+                } else {
+                    print("No records found.")
+                    completion(false)
                 }
             }
         }
     }
+
+
 
     private func categorizeItems(_ items: [Item]) -> [GroceryCategory] {
         // Group items by their category

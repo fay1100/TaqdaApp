@@ -184,8 +184,8 @@ struct AccountView: View {
             Divider()
 
             SettingRow(
-                icon: vm.isLoggedIn ? "rectangle.portrait.and.arrow.right" : "person.fill",
-                title: vm.isLoggedIn ? "Log Out" : "Sign In",
+                icon: vm.isLoggedIn ? "rectangle.portrait.and.arrow.right" : "person",
+                  title: vm.isLoggedIn ? NSLocalizedString("Log Out", comment: "Log out button text") : NSLocalizedString("Sign In", comment: "Sign in button text"),
                 iconColor: vm.isLoggedIn ? Color.red22: Color.PrimaryColor , // لون الأيقونة
                  textColor: vm.isLoggedIn ? Color.red22 : Color.titleColor // لون النص
             ) {
@@ -193,7 +193,7 @@ struct AccountView: View {
                     vm.logoutUser()
                     print("User logged out")
                 } else {
-                    showSignInView.toggle() // عرض واجهة تسجيل الدخول باستخدام fullScreenCover
+                    showSignInView.toggle() 
                 }
             }
         }
@@ -237,7 +237,6 @@ struct SettingRow: View {
 
 
 extension Color {
-//    static let red22 = Color("red22") // يجب أن تكون مضافة في Assets
     static let titleColor = Color("titleColor") // يجب أن تكون مضافة في Assets
     static let PrimaryColor = Color("PrimaryColor") // يجب أن تكون مضافة في Assets
 }

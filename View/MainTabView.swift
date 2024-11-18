@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var selectedTab: Int = 0
-    @StateObject private var viewModel = CreateListViewModel(userSession: UserSession.shared) // استخدام الكائن المشترك
+    @StateObject private var viewModel = CreateListViewModel(userSession: UserSession.shared)
 
     //@EnvironmentObject var userSession: UserSession
     var body: some View {
@@ -73,7 +73,7 @@ struct MainTabView: View {
                         .accessibilityAddTraits(selectedTab == 2 ? .isSelected : [])
                     }
                     .frame(maxWidth: .infinity)
-                    .frame(height: 90)
+                    .frame(height: 80)
                     .background(Color("bakgroundtap")
                                     .cornerRadius(20, corners: [.topLeft, .topRight]))
                     .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)

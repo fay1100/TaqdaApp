@@ -19,11 +19,13 @@ struct ListView: View {
     @EnvironmentObject var userSession: UserSession
 
     init(categories: [GroceryCategory], listID: CKRecord.ID?, listName: String?, userSession: UserSession) {
-        self.viewModel = ListViewModel(categories: categories, listID: listID, listName: listName, createListViewModel: CreateListViewModel(userSession: userSession))
-        self._listName = State(initialValue: listName ?? "")
-        self.createListViewModel = CreateListViewModel(userSession: userSession)
-    }
-
+    //        self.viewModel = ListViewModel(categories: categories, listID: listID, listName: listName, createListViewModel: CreateListViewModel(userSession: userSession))
+            self._listName = State(initialValue: listName ?? "")
+            self.createListViewModel = CreateListViewModel(userSession: userSession)
+            self.viewModel = ListViewModel(categories: categories, listID: listID, listName: listName, createListViewModel: CreateListViewModel(userSession: userSession))
+            print("Categories passed to ListView: \(categories)")
+            
+        }
     var body: some View {
         ZStack {
             Color("backgroundApp")
@@ -46,23 +48,38 @@ struct ListView: View {
                         }
                     }
                     Spacer()
-                    TextField("Enter Name", text: $listName)
-                        .font(.system(size: 22, weight: .bold))
+                    TextField("Enter Name", text: $createListViewModel.listName)                        .font(.system(size: 22, weight: .bold))
                         .multilineTextAlignment(.center)
                         .foregroundColor(Color("PrimaryColor"))
                     Spacer()
-                    Menu {
+                     Menu {
+//                        Button(action: {
+//                            viewModel.saveToFavorites()
+//                        }) {
+//                            Label("Favorite", systemImage: "heart")
+//                        }
                         Button(action: {
-                            viewModel.saveToFavorites()
+                            shareList()
                         }) {
-                            Label("Favorite", systemImage: "heart")
+                            Label("Share", systemImage: "square.and.arrow.up")
                         }
                         Button(action: {
-                            viewModel.deleteListAndMoveToMain()
+                            deleteListAndMoveToMain()
                         }) {
                             Label("Delete", systemImage: "trash")
                         }
                     } label: {
+                        ZStack {
+                            Circle()
+                                .fill(Color("CircleColor"))
+                                .frame(width: 40, height: 40)
+                            Image(systemName: "ellipsis")
+                                .resizable()
+                                .frame(width: 20, height: 4)
+                                .foregroundColor(Color("PrimaryColor"))
+                        }
+                    }
+                    primaryAction: {
                         ZStack {
                             Circle()
                                 .fill(Color("CircleColor"))
@@ -197,7 +214,9 @@ struct ListView: View {
 
                 VStack {
                     HStack(alignment: .center, spacing: 10) {
-                        ExpandingTextField(text: $newItem, dynamicHeight: $textFieldHeight, placeholder: "Enter Your Grocery ")
+//                        ExpandingTextField(text: $newItem, dynamicHeight: $textFieldHeight, placeholder: "Enter Your Grocery ")
+                        
+                        CustomTextField(text: $createListViewModel.userInput, placeholder: NSLocalizedString("write_down_your_list", comment: "Prompt for the user to write their list"))
                             .frame(height: textFieldHeight)
                             .padding(.vertical, 8)
                             .padding(.horizontal, 12)
@@ -208,18 +227,72 @@ struct ListView: View {
                                     .stroke(Color.gray, lineWidth: 0.1)
                             )
                         Button(action: {
-                            addNewItem()
-                        }) {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.purple.opacity(0.2))
-                                    .frame(width: 45, height: 45)
+                                                    createListViewModel.saveListToCloudKit(userSession: createListViewModel.userSession, listName: createListViewModel.listName) { listID in
+                                                        guard let listID = listID else { return }
 
-                                Image(systemName: "checkmark")
-                                    .foregroundColor(Color("PrimaryColor"))
-                                    .font(.system(size: 20))
-                            }
-                        }
+                                                        let listReference = CKRecord.Reference(recordID: listID, action: .deleteSelf)
+
+                                                        // تصنيف المنتجات قبل الحفظ
+                                                        createListViewModel.classifyProducts()
+
+                                                        for category in createListViewModel.categorizedProducts {
+                                                            for item in category.items {
+                                                                // تحقق إذا كان العنصر موجودًا في التصنيف الحالي
+                                                                if let categoryIndex = viewModel.categories.firstIndex(where: { $0.name == category.name }),
+                                                                   let itemIndex = viewModel.categories[categoryIndex].items.firstIndex(where: { $0.name.lowercased() == item.name.lowercased() }) {
+                                                                    // إذا كان العنصر موجودًا، قم بزيادة الكمية
+                                                                    DispatchQueue.main.async {
+                                                                        viewModel.categories[categoryIndex].items[itemIndex].quantity += item.quantity
+                                                                    }
+
+                                                                    // تحديث العنصر في قاعدة البيانات
+                                                                    createListViewModel.saveItem(
+                                                                        name: item.name,
+                                                                        quantity: Int64(viewModel.categories[categoryIndex].items[itemIndex].quantity),
+                                                                        listId: listReference,
+                                                                        category: category.name
+                                                                    ) { success in
+                                                                        if success {
+                                                                            print("Quantity updated for \(item.name)")
+                                                                        }
+                                                                    }
+                                                                } else {
+                                                                    // إذا كان العنصر غير موجود، أضفه كعنصر جديد
+                                                                    DispatchQueue.main.async {
+                                                                        if let categoryIndex = viewModel.categories.firstIndex(where: { $0.name == category.name }) {
+                                                                            viewModel.categories[categoryIndex].items.append(item)
+                                                                        } else {
+                                                                            // إضافة تصنيف جديد إذا لم يكن موجودًا
+                                                                            viewModel.categories.append(category)
+                                                                        }
+                                                                    }
+
+                                                                    // حفظ العنصر الجديد في قاعدة البيانات
+                                                                    createListViewModel.saveItem(
+                                                                        name: item.name,
+                                                                        quantity: Int64(item.quantity),
+                                                                        listId: listReference,
+                                                                        category: category.name
+                                                                    ) { success in
+                                                                        if success {
+                                                                            print("New item \(item.name) saved successfully.")
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }) {
+                                                    ZStack {
+                                                        Circle()
+                                                            .fill(Color.purple.opacity(0.2))
+                                                            .frame(width: 45, height: 45)
+                                                        Image(systemName: "checkmark")
+                                                            .foregroundColor(Color("PrimaryColor"))
+                                                            .font(.system(size: 20))
+                                                    }
+                                                }
+                        
                     }
                     .padding()
                     .background(
@@ -232,15 +305,49 @@ struct ListView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+                    createListViewModel.saveListToCloudKit(userSession: createListViewModel.userSession, listName: createListViewModel.listName) { savedListID in
+                        self.listID = savedListID
+                    }
+                }
     }
-    private func addNewItem() {
-        guard !listName.isEmpty else {
-            print("List name is required.")
-            return
+    private func shareList() {
+        let listContent = """
+        List Name: \(listName)
+        
+        Items:
+        \(viewModel.categories.flatMap { $0.items }.map { "- \($0.name) (\($0.quantity))" }.joined(separator: "\n"))
+        """
+        
+        let activityViewController = UIActivityViewController(activityItems: [listContent], applicationActivities: nil)
+        
+        // لضمان عرض واجهة المشاركة بشكل صحيح:
+        if let topController = UIApplication.shared.windows.first?.rootViewController {
+            topController.present(activityViewController, animated: true, completion: nil)
         }
+    }
+    private func deleteListAndMoveToMain() {
+        guard let listID = viewModel.listID else { return }
+        
+        let database = CKContainer.default().publicCloudDatabase
+        database.delete(withRecordID: listID) { _, error in
+            if let error = error {
+                print("Failed to delete list: \(error)")
+            } else {
+                DispatchQueue.main.async {
+                    navigateToMainTab = true
+                }
+            }
+        }
+    }
 
+    
+    
+    
+    
+    private func addNewItem() {
         guard !newItem.isEmpty else {
-            print("Item name is required.")
+            showAlert = true
             return
         }
 
@@ -253,24 +360,19 @@ struct ListView: View {
                 category: "Uncategorized"
             ) { success in
                 if success {
-                    print("Item '\(newItem)' added to existing list successfully.")
                     self.viewModel.fetchItems(for: existingListID) { _ in
                         print("Items refreshed.")
                     }
                 } else {
-                    print("Failed to add item '\(newItem)' to existing list.")
+                    showAlert = true
                 }
             }
         } else {
-            // Create a new list and then add the item
             createListViewModel.saveListToCloudKit(userSession: userSession, listName: listName) { newListID in
                 guard let newListID = newListID else {
-                    print("Failed to create a new list.")
+                    showAlert = true
                     return
                 }
-
-                print("New list created successfully with ID: \(newListID).")
-
                 let listReference = CKRecord.Reference(recordID: newListID, action: .none)
                 createListViewModel.saveItem(
                     name: newItem,
@@ -279,18 +381,17 @@ struct ListView: View {
                     category: "Uncategorized"
                 ) { success in
                     if success {
-                        print("Item '\(newItem)' added to new list successfully.")
-                        self.listID = newListID // Update the listID to the new one
+                        self.listID = newListID
                         self.viewModel.fetchItems(for: newListID) { _ in
                             print("Items fetched for new list.")
                         }
                     } else {
-                        print("Failed to add item '\(newItem)' to new list.")
+                        showAlert = true
                     }
                 }
             }
         }
-
+        
         newItem = ""
     }
 

@@ -140,17 +140,19 @@ struct ListsView: View {
     var listView: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 5) {
-                NavigationLink(destination:ListView(
+                
+                // زر إضافة قائمة جديدة
+                NavigationLink(destination: ListView(
                     categories: viewModel.categorizedProducts,
-                           listID: selectedList?.recordID,
-                           listName: selectedList?.listName,
-                           userSession: userSession)) {
+                    listID: selectedList?.recordID,
+                    listName: selectedList?.listName,
+                    userSession: userSession)) {
                     ZStack {
                         RoundedRectangle(cornerRadius: 8)
                             .fill(Color("Color+"))
                             .frame(width: 150, height: 190)
                             .cornerRadius(20)
-
+                        
                         Image(systemName: "plus")
                             .resizable()
                             .frame(width: 24, height: 24)
@@ -159,24 +161,25 @@ struct ListsView: View {
                 }
                 .padding(.vertical)
                 
+                // عرض القوائم
                 ForEach(filteredLists, id: \.listId) { list in
-                    Button(action: {
-                        selectedList = list
-                        isNavigatingToList = true
-                    }) {
+                    ZStack {
                         GroceryListView(
                             listName: list.listName,
-                            isHeartSelected: bindingForHeartSelected(at: viewModel.lists.firstIndex(where: { $0.listId == list.listId }) ?? 0),
-                            onCardTapped: {
-                                selectedList = list
-                                isNavigatingToList = true
+                            isHeartSelected: bindingForHeartSelected(
+                                at: viewModel.lists.firstIndex(where: { $0.listId == list.listId }) ?? 0
+                            ),
+                            onHeartTapped: {
+                                toggleFavoriteStatus(for: list)
                             }
                         )
                         .padding()
                         .background(Color("bakgroundTap"))
                         .cornerRadius(8)
                     }
-                    .buttonStyle(PlainButtonStyle())
+                    .onTapGesture {
+                        navigateToList(list)
+                    }
                 }
             }
             .padding(.horizontal)
@@ -185,28 +188,35 @@ struct ListsView: View {
             NavigationLink(
                 destination: ListView(
                     categories: viewModel.categorizedProducts,
-                           listID: selectedList?.recordID,
-                           listName: selectedList?.listName,
-                           userSession: userSession
+                    listID: selectedList?.recordID,
+                    listName: selectedList?.listName,
+                    userSession: userSession
                 ),
-                isActive: .constant(false)
-                
-                
-                
-                
-                
-                
-                // تعطيل التنقل في Preview
+                isActive: $isNavigatingToList
             ) { EmptyView() }
         )
     }
 
-
-    private var filteredLists: [List] {
-        if searchText.isEmpty {
-            return viewModel.lists
-        } else {
-            return viewModel.lists.filter { $0.listName.localizedCaseInsensitiveContains(searchText) }
+    private func toggleFavoriteStatus(for list: List) {
+        let newFavoriteStatus = !list.isFavorite
+        updateFavoriteStatus(for: list, isFavorite: newFavoriteStatus) { success in
+            DispatchQueue.main.async {
+                if success {
+                    if let index = viewModel.lists.firstIndex(where: { $0.listId == list.listId }) {
+                        viewModel.lists[index].isFavorite = newFavoriteStatus
+                        isHeartSelected[index] = newFavoriteStatus
+                        
+                        // إعادة تحميل القوائم المفضلة إن وجدت
+                        if newFavoriteStatus == false {
+                            viewModel.fetchLists { _ in
+                                print("Updated favorite lists.")
+                            }
+                        }
+                    }
+                } else {
+                    print("Failed to update favorite status.")
+                }
+            }
         }
     }
 
@@ -223,6 +233,24 @@ struct ListsView: View {
             }
         )
     }
+
+
+
+    private func navigateToList(_ list: List) {
+        selectedList = list
+        isNavigatingToList = true
+    }
+
+    private var filteredLists: [List] {
+        if searchText.isEmpty {
+            return viewModel.lists
+        } else {
+            return viewModel.lists.filter { $0.listName.localizedCaseInsensitiveContains(searchText) }
+        }
+    }
+
+
+    
 
     private func requestNotificationPermission() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in

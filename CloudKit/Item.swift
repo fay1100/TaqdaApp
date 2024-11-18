@@ -48,13 +48,18 @@ struct Item {
     // Convert the model to a CKRecord for saving to CloudKit
     func toRecord() -> CKRecord {
         let record = recordID != nil ? CKRecord(recordType: "Item", recordID: recordID!) : CKRecord(recordType: "Item")
-        record["itemId"] = itemId.uuidString as CKRecordValue  // Store UUID as a string
+        record["itemId"] = itemId.uuidString as CKRecordValue
         record["nameItem"] = nameItem as CKRecordValue
         record["numberOfItem"] = numberOfItem as CKRecordValue
-        record["listId"] = listId  // Reference to the associated list
+        record["listId"] = listId
         record["category"] = category as CKRecordValue
+
+        // Debug print to verify fields
+        print("Converting to CKRecord - nameItem: \(nameItem), numberOfItem: \(numberOfItem), category: \(category)")
+
         return record
     }
+
 
     // Initialize the model from a CKRecord
     init(record: CKRecord) {
@@ -76,4 +81,3 @@ struct Item {
         self.category = category
     }
 }
-

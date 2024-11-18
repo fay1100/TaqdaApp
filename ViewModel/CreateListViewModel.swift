@@ -27,7 +27,11 @@ class CreateListViewModel: ObservableObject {
     @Published var listName: String = ""
     @Published var userInput: String = ""
     @Published var categorizedProducts: [GroceryCategory] = []
-    @Published var showResults = false
+    @Published var showResults: Bool = false {
+         didSet {
+             print("showResults updated to: \(showResults)")
+         }
+     }
     private var database = CKContainer.default().publicCloudDatabase
       @Published var items: [Item] = []
       @Published var sharedLists: [SharedList] = []
@@ -432,31 +436,25 @@ extension CreateListViewModel {
         }
     }
 
-
     func saveItem(name: String, quantity: Int64, listId: CKRecord.Reference, category: String, completion: @escaping (Bool) -> Void) {
         let newItem = Item(itemId: UUID(), nameItem: name, numberOfItem: quantity, listId: listId, category: category)
 
+        // Debug print
+        print("Saving item - nameItem: \(newItem.nameItem), numberOfItem: \(newItem.numberOfItem), category: \(newItem.category)")
 
-        
-        // Convert newItem to CKRecord
         let record = newItem.toRecord()
-        
-        // Verify that all fields are set correctly
-        if let nameField = record["nameItem"], let quantityField = record["numberOfItem"], let listIdField = record["listId"], let categoryField = record["category"] {
-            print("Fields set correctly - nameItem: \(nameField), numberOfItem: \(quantityField), listId: \(listIdField), category: \(categoryField)")
-        } else {
-            print("Error: One or more fields are nil in the CKRecord.")
-        }
-        
-        // Save the record to CloudKit
+
+        // Verify CKRecord fields
+        print("CKRecord fields - nameItem: \(record["nameItem"] ?? ""), numberOfItem: \(record["numberOfItem"] ?? ""), category: \(record["category"] ?? "")")
+
         CKContainer.default().publicCloudDatabase.save(record) { savedRecord, error in
             DispatchQueue.main.async {
                 if let error = error {
                     print("Error saving item: \(error.localizedDescription)")
-                    completion(false) // Call completion with false if there's an error
+                    completion(false)
                 } else if let savedRecord = savedRecord {
                     print("Item '\(name)' saved successfully with recordID: \(savedRecord.recordID)")
-                    completion(true) // Call completion with true on success
+                    completion(true)
                 }
             }
         }

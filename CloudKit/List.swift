@@ -33,7 +33,8 @@ struct List {
         record["created_at"] = createdAt as CKRecordValue
         record["updated_at"] = updatedAt as CKRecordValue
         record["list_total_item"] = totalItems as CKRecordValue
-        
+        record["isFavorite"] = isFavorite ? 1 : 0
+
         return record
     }
 
@@ -56,7 +57,7 @@ struct List {
         self.createdAt = record["created_at"] as? Date ?? Date()
         self.updatedAt = record["updated_at"] as? Date ?? Date()
         self.totalItems = record["list_total_item"] as? Int64 ?? 0
-        self.isFavorite = record["isFavorite"] as? Bool ?? false
+        self.isFavorite = (record["isFavorite"] as? Int64 ?? 0) == 1
     }
 
     // Convenience initializer for creating a new List
@@ -71,3 +72,34 @@ struct List {
         self.isFavorite = isFavorite
     }
 }
+func updateFavoriteStatus(for list: List, isFavorite: Bool, completion: @escaping (Bool) -> Void) {
+    guard let recordID = list.recordID else {
+        print("No recordID found for the list.")
+        completion(false)
+        return
+    }
+
+    let database = CKContainer.default().publicCloudDatabase
+    database.fetch(withRecordID: recordID) { record, error in
+        guard let record = record, error == nil else {
+            print("Failed to fetch record: \(error?.localizedDescription ?? "Unknown error")")
+            completion(false)
+            return
+        }
+
+        record["isFavorite"] = isFavorite ? 1 : 0 // تحديث القيمة
+        database.save(record) { _, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("Failed to save record: \(error.localizedDescription)")
+                    completion(false)
+                } else {
+                    print("Favorite status updated successfully.")
+                    completion(true)
+                }
+            }
+        }
+    }
+}
+
+

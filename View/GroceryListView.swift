@@ -66,25 +66,21 @@ import SwiftUI
 //}
 
 struct GroceryListView: View {
-    //    @State private var isHeartSelected: Bool = false
     var listName: String
     @Binding var isHeartSelected: Bool
-    var onCardTapped: () -> Void
+    var onHeartTapped: () -> Void // وظيفة ممررة لتحديث الحالة
+
     var body: some View {
         VStack(spacing: 16) {
             VStack(alignment: .leading, spacing: 8) {
                 Text(listName)
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.white)
-                    .padding(.bottom,50)
+                    .padding(.bottom, 50)
                 
                 HStack {
-//                    Image(systemName: "person.circle.fill")
-//                        .foregroundColor(.white)
-//                        .font(.system(size: 30))
-                    
                     Button(action: {
-                        isHeartSelected.toggle()
+                        onHeartTapped() // استدعاء الوظيفة عند النقر
                     }) {
                         ZStack {
                             if isHeartSelected {
@@ -106,32 +102,14 @@ struct GroceryListView: View {
                         .foregroundColor(.white)
                         .font(.system(size: 30))
                 }
-                
-            }            .frame(width: 160, height: 190)
-                .background(Color("PrimaryColor"))
-                .cornerRadius(20)
-            
-            
-//            HStack {
-//                ZStack {
-//                    // الخلفية المربعة للزر
-//                    RoundedRectangle(cornerRadius: 8) // يمكنك ضبط cornerRadius حسب الحاجة، يمكن جعله 0 ليكون مربعًا بالكامل
-//                        .fill(Color("+Color")) // لون الخلفية
-//                        .frame(width: 150, height: 190) // حجم المربع
-//                        .cornerRadius(20)
-//
-//                    // أيقونة "بلس"
-//                    Image(systemName: "plus")
-//                        .resizable()
-//                        .frame(width: 24, height: 24) // حجم الأيقونة داخل المربع
-//                        .foregroundColor(Color.white)
-//                }
-//            }
-            
-            
+            }
+            .frame(width: 160, height: 190)
+            .background(Color("PrimaryColor"))
+            .cornerRadius(20)
         }
     }
 }
+
 
 #Preview {
     @State var isHeartSelectedPreview = false
@@ -140,13 +118,20 @@ struct GroceryListView: View {
         GroceryListView(
             listName: "Sample List 1",
             isHeartSelected: $isHeartSelectedPreview,
-            onCardTapped: { print("Tapped on Sample List 1") }
+            onHeartTapped: {
+                isHeartSelectedPreview.toggle()
+                print("Tapped on Sample List 1. New state: \(isHeartSelectedPreview)")
+            }
         )
         
         GroceryListView(
             listName: "Sample List 2",
             isHeartSelected: $isHeartSelectedPreview,
-            onCardTapped: { print("Tapped on Sample List 2") }
+            onHeartTapped: {
+                isHeartSelectedPreview.toggle()
+                print("Tapped on Sample List 2. New state: \(isHeartSelectedPreview)")
+            }
         )
     }
 }
+

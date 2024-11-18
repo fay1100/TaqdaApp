@@ -188,6 +188,7 @@
       }
     },
     "Enter list name" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -289,6 +290,7 @@
       }
     },
     "Favorite" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -485,6 +487,17 @@
         }
       }
     },
+    "Log Out" : {
+      "comment" : "Log out button text",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "تسجيل الخروج"
+          }
+        }
+      }
+    },
     "Move to the next onboarding screen" : {
       "localizations" : {
         "ar" : {
@@ -549,6 +562,22 @@
         }
       }
     },
+    "No Favorite Grocery." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا توجد لديك قوائم مفضلة."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have no favorite groceries.\n"
+          }
+        }
+      }
+    },
     "No Notifications" : {
       "localizations" : {
         "ar" : {
@@ -609,6 +638,27 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search for groceries"
+          }
+        }
+      }
+    },
+    "Share" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مشاركه"
+          }
+        }
+      }
+    },
+    "Sign In" : {
+      "comment" : "Sign in button text",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تسجيل الدخول"
           }
         }
       }
