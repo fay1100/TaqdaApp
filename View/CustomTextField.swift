@@ -102,14 +102,33 @@ struct ExpandingTextField: UIViewRepresentable {
         textView.backgroundColor = .clear
         textView.font = UIFont.systemFont(ofSize: 16)
         textView.delegate = context.coordinator
-        textView.text = placeholder
-        textView.textColor = UIColor.gray
+
+        // إعداد النص الافتراضي (placeholder) إذا كان النص فارغًا
+        if text.isEmpty {
+            textView.text = placeholder
+            textView.textColor = UIColor.gray
+        } else {
+            textView.text = text
+            textView.textColor = UIColor.black
+        }
+
         return textView
     }
 
     func updateUIView(_ uiView: UITextView, context: Context) {
-        uiView.text = text.isEmpty ? placeholder : text
-        uiView.textColor = text.isEmpty ? UIColor.gray : UIColor.black // اللون الأسود للنص المدخل
+        // التأكد من عدم تغيير النص إذا كان المستخدم يكتب أو إذا كان النص الافتراضي موجودًا
+        if uiView.text == placeholder && !text.isEmpty {
+            uiView.text = text
+            uiView.textColor = UIColor.black
+        }
+
+        // لا تعيين النص الافتراضي إذا كان النص فارغًا هنا
+        if uiView.text.isEmpty && !text.isEmpty {
+            uiView.text = text
+            uiView.textColor = UIColor.black
+        }
+
+        // تحديث ارتفاع النص
         ExpandingTextField.recalculateHeight(view: uiView, result: $dynamicHeight)
     }
 
@@ -125,21 +144,24 @@ struct ExpandingTextField: UIViewRepresentable {
         }
 
         func textViewDidBeginEditing(_ textView: UITextView) {
+            // عند بداية الكتابة، يتم مسح النص الافتراضي فقط
             if textView.text == parent.placeholder {
                 textView.text = ""
-                textView.textColor = UIColor.black // تغيير اللون إلى الأسود
+                textView.textColor = UIColor.black
             }
         }
 
         func textViewDidEndEditing(_ textView: UITextView) {
+            // إذا انتهى المستخدم من الكتابة وترك الحقل فارغًا، أعد النص الافتراضي
             if textView.text.isEmpty {
                 textView.text = parent.placeholder
-                textView.textColor = UIColor.gray // اللون الرمادي للنص الافتراضي
+                textView.textColor = UIColor.gray
             }
         }
 
         func textViewDidChange(_ textView: UITextView) {
-            parent.text = textView.text
+            // تحديث النص الحقيقي عند التغيير
+            parent.text = textView.text == parent.placeholder ? "" : textView.text
             ExpandingTextField.recalculateHeight(view: textView, result: parent.$dynamicHeight)
         }
     }
@@ -153,4 +175,3 @@ struct ExpandingTextField: UIViewRepresentable {
         }
     }
 }
-

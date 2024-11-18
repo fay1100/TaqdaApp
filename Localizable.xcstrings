@@ -188,6 +188,7 @@
       }
     },
     "Enter list name" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -578,6 +579,7 @@
       }
     },
     "No Notifications" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -822,8 +824,27 @@
         }
       }
     },
+    "write down your grocery" : {
+      "comment" : "Prompt for the user to write their list",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اكتب قائمتك هنا"
+          }
+        }
+      }
+    },
     "write_down_your_list" : {
-      "comment" : "Prompt for the user to write their list"
+      "comment" : "Prompt for the user to write their list",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اكتب قائمتك هنا"
+          }
+        }
+      }
     },
     "You do not have an account yet" : {
       "extractionState" : "stale",
@@ -838,6 +859,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You do not have an account yet"
+          }
+        }
+      }
+    },
+    "You do not have any notification yet" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا يوجد لديك شعارات "
           }
         }
       }

@@ -64,9 +64,10 @@ struct NotificationView: View {
                             ScrollView {
                                 VStack(spacing: 15) {
                                     if notifications.isEmpty {
-                                        Text("No Notifications")
-                                            .foregroundColor(.gray)
+                                        Text("You do not have any notification yet")
+                                            .foregroundColor(Color("Textlist"))
                                             .font(.system(size: 16, weight: .medium))
+                                            .padding(.top ,380)
                                     } else {
                                         ForEach(notifications) { notification in
                                             HStack(spacing: 12) {

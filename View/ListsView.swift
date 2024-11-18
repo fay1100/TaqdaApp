@@ -41,7 +41,12 @@ struct ListsView: View {
             
             ZStack {
                 Color("backgroundApp")
-                    .ignoresSafeArea()
+                               .ignoresSafeArea()
+                               .onTapGesture {
+                                   // إخفاء لوحة المفاتيح
+                                   UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                               }
+
                 VStack {
                     headerView
                     searchView
@@ -88,7 +93,10 @@ struct ListsView: View {
                 .foregroundColor(Color("PrimaryColor"))
                 .padding(.leading, 8)
             TextField("Search lists", text: $searchText)
-                .padding(.vertical, 12)
+                        .onSubmit {
+                              UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                          }
+                        .padding(.vertical, 12)
         }
         .background(Color("CircleColor"))
         .cornerRadius(8)
@@ -222,7 +230,6 @@ struct ListsView: View {
                         viewModel.lists[index].isFavorite = newFavoriteStatus
                         isHeartSelected[index] = newFavoriteStatus
                         
-                        // إعادة تحميل القوائم المفضلة إن وجدت
                         if newFavoriteStatus == false {
                             viewModel.fetchLists { _ in
                                 print("Updated favorite lists.")
@@ -254,7 +261,6 @@ struct ListsView: View {
     private func navigateToList(_ list: List) {
         selectedList = list
 
-        // Unwrap the recordID safely
         guard let recordID = list.recordID else {
             print("Record ID is nil for the selected list.")
             return
@@ -298,7 +304,6 @@ struct ListsView: View {
         }
     }
     
-    // Additional views for the header elements
     var profileImageView: some View {
         ZStack {
             Circle()

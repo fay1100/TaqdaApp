@@ -30,6 +30,10 @@ struct ListView: View {
         ZStack {
             Color("backgroundApp")
                 .ignoresSafeArea()
+                .onTapGesture {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
+            
             Image("Background").resizable().ignoresSafeArea()
 
             VStack {
@@ -79,17 +83,7 @@ struct ListView: View {
                                 .foregroundColor(Color("PrimaryColor"))
                         }
                     }
-                    primaryAction: {
-                        ZStack {
-                            Circle()
-                                .fill(Color("CircleColor"))
-                                .frame(width: 40, height: 40)
-                            Image(systemName: "ellipsis")
-                                .resizable()
-                                .frame(width: 20, height: 4)
-                                .foregroundColor(Color("PrimaryColor"))
-                        }
-                    }
+              
                 }
                 .padding(.horizontal)
                 .padding(.top, 20)
@@ -214,9 +208,12 @@ struct ListView: View {
 
                 VStack {
                     HStack(alignment: .center, spacing: 10) {
-//                        ExpandingTextField(text: $newItem, dynamicHeight: $textFieldHeight, placeholder: "Enter Your Grocery ")
-                        
-                        CustomTextField(text: $createListViewModel.userInput, placeholder: NSLocalizedString("write_down_your_list", comment: "Prompt for the user to write their list"))
+                        ExpandingTextField(
+                            text: $createListViewModel.userInput,
+                            dynamicHeight: $textFieldHeight, // تمرير dynamicHeight
+                            placeholder: NSLocalizedString("write down your grocery", comment: "Prompt for the user to write their list")
+                        )
+//                        CustomTextField(text: $createListViewModel.userInput, placeholder: NSLocalizedString("write_down_your_list", comment: "Prompt for the user to write their list"))
                             .frame(height: textFieldHeight)
                             .padding(.vertical, 8)
                             .padding(.horizontal, 12)
@@ -305,6 +302,15 @@ struct ListView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .background(
+                 NavigationLink(
+                     destination: MainTabView()
+                         .navigationBarBackButtonHidden(true),
+                     isActive: $navigateToMainTab,
+                     label: { EmptyView() }
+                 )
+                 .hidden()
+             )
         .onAppear {
                     createListViewModel.saveListToCloudKit(userSession: createListViewModel.userSession, listName: createListViewModel.listName) { savedListID in
                         self.listID = savedListID
@@ -328,7 +334,7 @@ struct ListView: View {
     }
     private func deleteListAndMoveToMain() {
         guard let listID = viewModel.listID else { return }
-        
+
         let database = CKContainer.default().publicCloudDatabase
         database.delete(withRecordID: listID) { _, error in
             if let error = error {
