@@ -311,11 +311,13 @@ struct ListView: View {
                  )
                  .hidden()
              )
-        .onAppear {
-                    createListViewModel.saveListToCloudKit(userSession: createListViewModel.userSession, listName: createListViewModel.listName) { savedListID in
-                        self.listID = savedListID
-                    }
-                }
+//        .onAppear {
+//            guard listID == nil else { return }
+//            createListViewModel.saveListToCloudKit(userSession: createListViewModel.userSession, listName: createListViewModel.listName) { savedListID in
+//                self.listID = savedListID
+//            }
+//        }
+
     }
     private func shareList() {
         let listContent = """
@@ -351,55 +353,55 @@ struct ListView: View {
     
     
     
-    private func addNewItem() {
-        guard !newItem.isEmpty else {
-            showAlert = true
-            return
-        }
-
-        if let existingListID = listID {
-            let listReference = CKRecord.Reference(recordID: existingListID, action: .none)
-            createListViewModel.saveItem(
-                name: newItem,
-                quantity: 1,
-                listId: listReference,
-                category: "Uncategorized"
-            ) { success in
-                if success {
-                    self.viewModel.fetchItems(for: existingListID) { _ in
-                        print("Items refreshed.")
-                    }
-                } else {
-                    showAlert = true
-                }
-            }
-        } else {
-            createListViewModel.saveListToCloudKit(userSession: userSession, listName: listName) { newListID in
-                guard let newListID = newListID else {
-                    showAlert = true
-                    return
-                }
-                let listReference = CKRecord.Reference(recordID: newListID, action: .none)
-                createListViewModel.saveItem(
-                    name: newItem,
-                    quantity: 1,
-                    listId: listReference,
-                    category: "Uncategorized"
-                ) { success in
-                    if success {
-                        self.listID = newListID
-                        self.viewModel.fetchItems(for: newListID) { _ in
-                            print("Items fetched for new list.")
-                        }
-                    } else {
-                        showAlert = true
-                    }
-                }
-            }
-        }
-        
-        newItem = ""
-    }
+//    private func addNewItem() {
+//        guard !newItem.isEmpty else {
+//            showAlert = true
+//            return
+//        }
+//
+//        if let existingListID = listID {
+//            let listReference = CKRecord.Reference(recordID: existingListID, action: .none)
+//            createListViewModel.saveItem(
+//                name: newItem,
+//                quantity: 1,
+//                listId: listReference,
+//                category: "Uncategorized"
+//            ) { success in
+//                if success {
+//                    self.viewModel.fetchItems(for: existingListID) { _ in
+//                        print("Items refreshed.")
+//                    }
+//                } else {
+//                    showAlert = true
+//                }
+//            }
+//        } else {
+//            createListViewModel.saveListToCloudKit(userSession: userSession, listName: listName) { newListID in
+//                guard let newListID = newListID else {
+//                    showAlert = true
+//                    return
+//                }
+//                let listReference = CKRecord.Reference(recordID: newListID, action: .none)
+//                createListViewModel.saveItem(
+//                    name: newItem,
+//                    quantity: 1,
+//                    listId: listReference,
+//                    category: "Uncategorized"
+//                ) { success in
+//                    if success {
+//                        self.listID = newListID
+//                        self.viewModel.fetchItems(for: newListID) { _ in
+//                            print("Items fetched for new list.")
+//                        }
+//                    } else {
+//                        showAlert = true
+//                    }
+//                }
+//            }
+//        }
+//        
+//        newItem = ""
+//    }
 
 
     private func requestNotificationPermission(completion: @escaping (Bool) -> Void) {

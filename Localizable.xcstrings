@@ -188,7 +188,6 @@
       }
     },
     "Enter list name" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -584,7 +583,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "لا يوجد اشعارات "
+            "value" : "لا يوجد إشعارات "
           }
         },
         "en" : {
@@ -868,7 +867,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "لا يوجد لديك شعارات "
+            "value" : "لا يوجد لديك إشعارات "
           }
         }
       }
