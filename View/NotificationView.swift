@@ -1,13 +1,9 @@
+//
+//  NotificationView.swift
+//  TaqdaApp
+//
+
 import SwiftUI
-
-struct NotificationItem: Identifiable, Codable {
-    let id: UUID
-    let title: String
-    let message: String
-    let date: Date
-}
-
-
 
 
 
@@ -67,7 +63,7 @@ struct NotificationView: View {
                                         Text("You do not have any notification yet")
                                             .foregroundColor(Color("Textlist"))
                                             .font(.system(size: 16, weight: .medium))
-                                            .padding(.top ,380)
+                                            .padding(.top, 380)
                                     } else {
                                         ForEach(notifications) { notification in
                                             HStack(spacing: 12) {
@@ -164,7 +160,4 @@ class NotificationCenterDelegate: NSObject, UNUserNotificationCenterDelegate {
         onReceiveNotification(newNotification)
         completionHandler([.sound, .banner]) // عرض الإشعار في النظام
     }
-}
-#Preview {
-    NotificationView()
 }

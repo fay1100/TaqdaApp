@@ -11,6 +11,7 @@
 		5A10BFC52CE8BDF400D2AD2D /* On22233.gif in Resources */ = {isa = PBXBuildFile; fileRef = 5A10BFC42CE8BDF400D2AD2D /* On22233.gif */; };
 		5A10BFC62CE8BDF400D2AD2D /* On22233.gif in Resources */ = {isa = PBXBuildFile; fileRef = 5A10BFC42CE8BDF400D2AD2D /* On22233.gif */; };
 		5A10BFC82CEB2A9200D2AD2D /* TipKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A10BFC72CEB2A9200D2AD2D /* TipKit.swift */; };
+		5A10BFCA2CEC682C00D2AD2D /* ReminderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A10BFC92CEC682C00D2AD2D /* ReminderManager.swift */; };
 		5A22EEA82CE6750100E83596 /* TaqdaAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A22EEA72CE6750100E83596 /* TaqdaAppApp.swift */; };
 		5A22EEAA2CE6750100E83596 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A22EEA92CE6750100E83596 /* ContentView.swift */; };
 		5A22EEAC2CE6750200E83596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A22EEAB2CE6750200E83596 /* Assets.xcassets */; };
@@ -68,6 +69,7 @@
 		5A10BFB92CE8185500D2AD2D /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		5A10BFC42CE8BDF400D2AD2D /* On22233.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = On22233.gif; sourceTree = "<group>"; };
 		5A10BFC72CEB2A9200D2AD2D /* TipKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipKit.swift; sourceTree = "<group>"; };
+		5A10BFC92CEC682C00D2AD2D /* ReminderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderManager.swift; sourceTree = "<group>"; };
 		5A22EEA42CE6750100E83596 /* TaqdaApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaqdaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A22EEA72CE6750100E83596 /* TaqdaAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaqdaAppApp.swift; sourceTree = "<group>"; };
 		5A22EEA92CE6750100E83596 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 				5A6BC7A52CE6B5E4004FEC9C /* MainTabView.swift */,
 				5A6BC7BC2CE740B5004FEC9C /* ListsView.swift */,
 				5A6BC7CB2CE76959004FEC9C /* ListView.swift */,
+				5A10BFC92CEC682C00D2AD2D /* ReminderManager.swift */,
 				5A10BFC72CEB2A9200D2AD2D /* TipKit.swift */,
 				5A6BC7B82CE7401D004FEC9C /* GroceryListView.swift */,
 				5A6BC7BE2CE740DE004FEC9C /* CreateListView.swift */,
@@ -412,6 +415,7 @@
 				5A6BC78E2CE6B376004FEC9C /* Item.swift in Sources */,
 				5A6BC7832CE6B079004FEC9C /* OnboardingView.swift in Sources */,
 				5A6BC78C2CE6B354004FEC9C /* CloudKitUtility.swift in Sources */,
+				5A10BFCA2CEC682C00D2AD2D /* ReminderManager.swift in Sources */,
 				5A6BC7A62CE6B5E4004FEC9C /* MainTabView.swift in Sources */,
 				EE2ABA1C2CE95FD500464D4E /* UnifiedListViewModel.swift in Sources */,
 				5A6BC77C2CE6AF80004FEC9C /* SplashScreenView.swift in Sources */,
@@ -603,9 +607,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = fa.TaqdaApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -635,9 +643,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = fa.TaqdaApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
