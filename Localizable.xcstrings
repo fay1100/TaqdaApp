@@ -198,7 +198,6 @@
       }
     },
     "Enter list name" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

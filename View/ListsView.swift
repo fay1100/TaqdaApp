@@ -208,7 +208,7 @@ struct ListsView: View {
         }
         .background(
             NavigationLink(// for fetch
-                destination: ListView(
+                destination: DisplayListView(
                     categories: listViewModel.categories,
                     listID: selectedList?.recordID,
                     listName: selectedList?.listName,

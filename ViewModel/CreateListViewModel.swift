@@ -484,6 +484,41 @@ extension CreateListViewModel {
             }
         }
     }
+    func updateItem(name: String, quantity: Int64, listId: CKRecord.Reference, category: String, completion: @escaping (Bool) -> Void) {
+        // البحث عن العنصر في قاعدة بيانات CloudKit
+        let predicate = NSPredicate(format: "name == %@ AND listId == %@", name, listId)
+        let query = CKQuery(recordType: "GroceryItem", predicate: predicate)
+        let database = CKContainer.default().publicCloudDatabase
+
+        database.perform(query, inZoneWith: nil) { results, error in
+            if let error = error {
+                print("Error fetching item to update: \(error.localizedDescription)")
+                completion(false)
+                return
+            }
+
+            guard let record = results?.first else {
+                print("Item not found for update.")
+                completion(false)
+                return
+            }
+
+            // تحديث القيم الجديدة
+            record["quantity"] = quantity
+            record["category"] = category
+
+            // حفظ التحديث
+            database.save(record) { _, saveError in
+                if let saveError = saveError {
+                    print("Error saving updated item: \(saveError.localizedDescription)")
+                    completion(false)
+                } else {
+                    print("Item \(name) updated successfully.")
+                    completion(true)
+                }
+            }
+        }
+    }
 
 //    func createShare() {
 //        guard let listID = currentListID else {
