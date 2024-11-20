@@ -50,4 +50,5 @@ struct SharedList: Identifiable {
         self.ownerId = ownerId
         self.listId = listId
     }
+    
 }

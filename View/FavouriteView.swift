@@ -81,22 +81,23 @@ struct FavouriteView: View {
                 ForEach(favoriteLists, id: \.listId) { list in
                     ZStack {
                         GroceryListView(
-                            listName: list.listName,
-                            isHeartSelected: .constant(list.isFavorite),
-                            onHeartTapped: {
-                                let newFavoriteStatus = false
-                                updateFavoriteStatus(for: list, isFavorite: newFavoriteStatus) { success in
-                                    if success {
-                                        if let index = favoriteLists.firstIndex(where: { $0.listId == list.listId }) {
-                                            favoriteLists.remove(at: index)
-                                        }
-                                    }
-                                }
-                            }
-                        )
-                        .onTapGesture {
-                            navigateToList(list)
-                        }
+                                     listName: list.listName,
+                                     isHeartSelected: .constant(list.isFavorite),
+                                     isShared: list.isShared, // تمرير قيمة isShared هنا
+                                     onHeartTapped: {
+                                         let newFavoriteStatus = false
+                                         updateFavoriteStatus(for: list, isFavorite: newFavoriteStatus) { success in
+                                             if success {
+                                                 if let index = favoriteLists.firstIndex(where: { $0.listId == list.listId }) {
+                                                     favoriteLists.remove(at: index)
+                                                 }
+                                             }
+                                         }
+                                     }
+                                 )
+                                 .onTapGesture {
+                                     navigateToList(list)
+                                 }
                     }
                 }
             }

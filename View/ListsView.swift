@@ -187,14 +187,16 @@ struct ListsView: View {
                 ForEach(filteredLists, id: \.listId) { list in
                                     ZStack {
                                         GroceryListView(
-                                            listName: list.listName,
-                                            isHeartSelected: bindingForHeartSelected(
-                                                at: viewModel.lists.firstIndex(where: { $0.listId == list.listId }) ?? 0
-                                            ),
-                                            onHeartTapped: {
-                                                toggleFavoriteStatus(for: list)
-                                            }
-                                        )
+                                              listName: list.listName,
+                                              isHeartSelected: bindingForHeartSelected(
+                                                  at: viewModel.lists.firstIndex(where: { $0.listId == list.listId }) ?? 0
+                                              ),
+                                              isShared: list.isShared, // Pass the isShared property of the list
+                                              onHeartTapped: {
+                                                  toggleFavoriteStatus(for: list)
+                                              }
+                                          )
+                                          
                                         .padding()
                                         .background(Color("bakgroundTap"))
                                         .cornerRadius(8)

@@ -15,7 +15,7 @@ struct List {
     var recordID: CKRecord.ID?
     var listId: UUID
     var listName: String
-    var isShared: Bool
+    var isShared: Bool // خاصية تحدد ما إذا كانت القائمة مشتركة
     var ownedId: CKRecord.Reference // Reference to the user who owns the list
     var createdAt: Date
     var updatedAt: Date
@@ -44,7 +44,7 @@ struct List {
         self.listId = UUID(uuidString: record["list_id"] as? String ?? "") ?? UUID()  // Parse list_id as UUID from String
         self.listName = record["list_name"] as? String ?? ""
         self.isShared = record["isShared"] as? Bool ?? false
-        
+
         // Safely unwrap owned_id
         if let ownerRef = record["owned_id"] as? CKRecord.Reference {
             self.ownedId = ownerRef
