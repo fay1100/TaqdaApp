@@ -83,18 +83,5 @@ struct Item {
     
 }
 
-func deleteItem(recordID: CKRecord.ID, completion: @escaping (Bool) -> Void) {
-    let database = CKContainer.default().publicCloudDatabase
-    
-    database.delete(withRecordID: recordID) { recordID, error in
-        DispatchQueue.main.async {
-            if let error = error {
-                print("Failed to delete item: \(error.localizedDescription)")
-                completion(false)
-            } else {
-                print("Item deleted successfully.")
-                completion(true)
-            }
-        }
-    }
-}
+
+

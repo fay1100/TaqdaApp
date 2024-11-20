@@ -65,6 +65,12 @@
             "state" : "translated",
             "value" : "أضف العناصر إلى قائمة التسوق الخاصة بك"
           }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Items to Your Grocery List"
+          }
         }
       }
     },
@@ -198,6 +204,7 @@
       }
     },
     "Enter list name" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -221,6 +228,12 @@
             "state" : "translated",
             "value" : "أدخل اسم"
           }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter List Name"
+          }
         }
       }
     },
@@ -228,8 +241,14 @@
       "localizations" : {
         "ar" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "ادخل اسم "
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter List Name"
           }
         }
       }
@@ -658,6 +677,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "افصل العناصر باستخدام الفاصلة ، أو قم بكتابة كل عنصر في سطر جديد."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Separate items using a comma, or list each item on a new line."
           }
         }
       }
