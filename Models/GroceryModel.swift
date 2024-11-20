@@ -10,6 +10,7 @@ import Foundation
 struct GroceryItem: Identifiable {
     let id = UUID()  // unique identifier
     var name: String
+    var itemId: UUID // unique identifier for CloudKit
     var quantity: Int
     var isSelected: Bool = false // إضافة حالة التحديد للتصنيف
     

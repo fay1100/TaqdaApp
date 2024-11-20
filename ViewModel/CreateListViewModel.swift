@@ -87,16 +87,16 @@ class CreateListViewModel: ObservableObject {
                 let category = prediction.label
                 
                 if categoryDict[category] != nil {
-                    categoryDict[category]?.append(GroceryItem(name: productName, quantity: quantity))
+                    categoryDict[category]?.append(GroceryItem(name: productName, itemId: UUID(), quantity: quantity))
                 } else {
-                    categoryDict[category] = [GroceryItem(name: productName, quantity: quantity)]
+                    categoryDict[category] = [GroceryItem(name: productName, itemId: UUID(), quantity: quantity)]
                 }
             } catch {
                 print("Prediction error: \(error)")
                 if categoryDict["Prediction Error"] != nil {
-                    categoryDict["Prediction Error"]?.append(GroceryItem(name: productName, quantity: quantity))
+                    categoryDict["Prediction Error"]?.append(GroceryItem(name: productName, itemId: UUID(), quantity: quantity))
                 } else {
-                    categoryDict["Prediction Error"] = [GroceryItem(name: productName, quantity: quantity)]
+                    categoryDict["Prediction Error"] = [GroceryItem(name: productName, itemId: UUID(), quantity: quantity)]
                 }
             }
         }
@@ -104,6 +104,7 @@ class CreateListViewModel: ObservableObject {
         // تحويل النتائج إلى مصفوفة من GroceryCategory
         categorizedProducts = categoryDict.map { GroceryCategory(name: $0.key, items: $0.value) }
     }
+
 
 
     private func preprocessInputWithNLP(_ input: String) -> String {
@@ -373,33 +374,52 @@ extension CreateListViewModel {
             completion(nil)
             return
         }
-        
-        // Create a new record of type "List"
-        let newList = CKRecord(recordType: "List")
-        
-        // Set the fields for the list record
-        newList["list_name"] = listName as CKRecordValue
-        newList["isShared"] = false as CKRecordValue
-        newList["created_at"] = Date() as CKRecordValue
-        newList["updated_at"] = Date() as CKRecordValue
-        newList["list_total_item"] = 0 as CKRecordValue
-        newList["list_id"] = newList.recordID.recordName as CKRecordValue
-        
-        // Create the user reference for `user_id` field
-        let ownerReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: userID), action: .none)
-        newList["user_id"] = ownerReference // Set the ownerId reference
 
-        print("Saving record with list_name: \(listName), ownerId: \(ownerReference)")
-        
-        // Save the new record to CloudKit
-        CKContainer.default().publicCloudDatabase.save(newList) { record, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    print("Error saving list: \(error.localizedDescription)")
+        if let existingListID = currentListID {
+            // تحديث القائمة الموجودة
+            CKContainer.default().publicCloudDatabase.fetch(withRecordID: existingListID) { record, error in
+                if let record = record {
+                    record["list_name"] = listName as CKRecordValue
+                    record["updated_at"] = Date() as CKRecordValue
+                    
+                    CKContainer.default().publicCloudDatabase.save(record) { updatedRecord, error in
+                        DispatchQueue.main.async {
+                            if let error = error {
+                                print("Error updating list: \(error.localizedDescription)")
+                                completion(nil)
+                            } else {
+                                print("List updated successfully.")
+                                completion(updatedRecord?.recordID)
+                            }
+                        }
+                    }
+                } else if let error = error {
+                    print("Error fetching list for update: \(error.localizedDescription)")
                     completion(nil)
-                } else if let record = record {
-                    print("List saved successfully with ID: \(record.recordID)")
-                    completion(record.recordID)
+                }
+            }
+        } else {
+            // إنشاء قائمة جديدة
+            let newList = CKRecord(recordType: "List")
+            newList["list_name"] = listName as CKRecordValue
+            newList["isShared"] = false as CKRecordValue
+            newList["created_at"] = Date() as CKRecordValue
+            newList["updated_at"] = Date() as CKRecordValue
+            newList["list_id"] = newList.recordID.recordName as CKRecordValue
+
+            let ownerReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: userID), action: .none)
+            newList["user_id"] = ownerReference
+
+            CKContainer.default().publicCloudDatabase.save(newList) { record, error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        print("Error saving list: \(error.localizedDescription)")
+                        completion(nil)
+                    } else {
+                        print("List created successfully.")
+                        self.currentListID = record?.recordID
+                        completion(record?.recordID)
+                    }
                 }
             }
         }
@@ -423,25 +443,26 @@ extension CreateListViewModel {
               }
           }
       }
-    func saveItemsAndCount(listReference: CKRecord.Reference) {
-        var itemCount = 0
-        let totalItems = categorizedProducts.flatMap { $0.items }.count
+    func saveItem(name: String, quantity: Int64, listId: CKRecord.Reference?, category: String, completion: @escaping (Bool) -> Void) {
+        let listReference = listId ?? CKRecord.Reference(recordID: currentListID ?? CKRecord.ID(recordName: UUID().uuidString), action: .none)
 
-        for category in categorizedProducts {
-            for item in category.items {
-                // Pass category.name directly as the `category` argument
-                saveItem(name: item.name, quantity: Int64(item.quantity), listId: listReference, category: category.name) { success in
-                    if success {
-                        itemCount += 1
-                        // Update list count after the last item is saved
-                        if itemCount == totalItems {
-                            self.updateListCount(listReference.recordID, count: itemCount)
-                        }
-                    }
+        let newItem = Item(itemId: UUID(), nameItem: name, numberOfItem: quantity, listId: listReference, category: category)
+
+        let record = newItem.toRecord()
+
+        CKContainer.default().publicCloudDatabase.save(record) { savedRecord, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("Error saving item: \(error.localizedDescription)")
+                    completion(false)
+                } else {
+                    print("Item '\(name)' saved successfully with recordID: \(savedRecord?.recordID ?? CKRecord.ID())")
+                    completion(true)
                 }
             }
         }
     }
+
 
     func saveItem(name: String, quantity: Int64, listId: CKRecord.Reference, category: String, completion: @escaping (Bool) -> Void) {
         let newItem = Item(itemId: UUID(), nameItem: name, numberOfItem: quantity, listId: listId, category: category)
@@ -468,6 +489,7 @@ extension CreateListViewModel {
     }
 
 
+
     func updateListCount(_ listID: CKRecord.ID, count: Int) {
         CKContainer.default().publicCloudDatabase.fetch(withRecordID: listID) { record, error in
             if let record = record {
@@ -486,8 +508,8 @@ extension CreateListViewModel {
     }
     func updateItem(name: String, quantity: Int64, listId: CKRecord.Reference, category: String, completion: @escaping (Bool) -> Void) {
         // البحث عن العنصر في قاعدة بيانات CloudKit
-        let predicate = NSPredicate(format: "name == %@ AND listId == %@", name, listId)
-        let query = CKQuery(recordType: "GroceryItem", predicate: predicate)
+        let predicate = NSPredicate(format: "nameItem == %@ AND listId == %@", name, listId)
+        let query = CKQuery(recordType: "Item", predicate: predicate)
         let database = CKContainer.default().publicCloudDatabase
 
         database.perform(query, inZoneWith: nil) { results, error in
@@ -504,8 +526,8 @@ extension CreateListViewModel {
             }
 
             // تحديث القيم الجديدة
-            record["quantity"] = quantity
-            record["category"] = category
+            record["quantity"] = quantity as CKRecordValue
+            record["category"] = category as CKRecordValue
 
             // حفظ التحديث
             database.save(record) { _, saveError in
@@ -519,6 +541,7 @@ extension CreateListViewModel {
             }
         }
     }
+
 
 //    func createShare() {
 //        guard let listID = currentListID else {

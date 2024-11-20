@@ -31,6 +31,7 @@ class ListViewModel: ObservableObject {
         self.listID = listID
         self.listName = listName ?? "Unnamed List"
         self.createListViewModel = createListViewModel
+        self.createListViewModel.currentListID = listID
     }
     func refreshCategories(with newCategories: [GroceryCategory]) {
           DispatchQueue.main.async {
@@ -181,22 +182,22 @@ class ListViewModel: ObservableObject {
 
 
     private func categorizeItems(_ items: [Item]) -> [GroceryCategory] {
-        // Group items by their category
         var categoryDict: [String: [GroceryItem]] = [:]
         
         for item in items {
-            // Map `Item` to `GroceryItem`
             let groceryItem = GroceryItem(
                 name: item.nameItem,
+                itemId: item.itemId, // تمرير itemId من CloudKit
                 quantity: Int(item.numberOfItem),
-                isSelected: false // Assuming default state
+                isSelected: false
             )
             categoryDict[item.category, default: []].append(groceryItem)
         }
 
-        // Convert the dictionary into an array of GroceryCategory objects
         return categoryDict.map { GroceryCategory(name: $0.key, items: $0.value) }
     }
+
+
 
 
 
@@ -271,6 +272,50 @@ class ListViewModel: ObservableObject {
         }
         reorderCategories()
     }
+    
+    func deleteItem(at categoryIndex: Int, itemIndex: Int, completion: @escaping (Bool) -> Void) {
+        let item = categories[categoryIndex].items[itemIndex]
+        
+        // البحث عن العنصر في CloudKit باستخدام `itemId`
+        let predicate = NSPredicate(format: "itemId == %@", item.itemId.uuidString)
+        let query = CKQuery(recordType: "Item", predicate: predicate)
+
+        CKContainer.default().publicCloudDatabase.perform(query, inZoneWith: nil) { results, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("Error fetching item to delete: \(error.localizedDescription)")
+                    completion(false)
+                    return
+                }
+                
+                guard let record = results?.first else {
+                    print("Item not found for deletion.")
+                    completion(false)
+                    return
+                }
+
+                // حذف العنصر من CloudKit
+                CKContainer.default().publicCloudDatabase.delete(withRecordID: record.recordID) { _, error in
+                    if let error = error {
+                        print("Error deleting item: \(error.localizedDescription)")
+                        completion(false)
+                    } else {
+                        print("Item deleted successfully.")
+                        
+                        // حذف العنصر من الذاكرة
+                        self.categories[categoryIndex].items.remove(at: itemIndex)
+                        if self.categories[categoryIndex].items.isEmpty {
+                            self.categories.remove(at: categoryIndex)
+                        }
+                        completion(true)
+                    }
+                }
+            }
+        }
+    }
+
+
+
 
 }
 

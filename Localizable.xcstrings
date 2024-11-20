@@ -90,6 +90,26 @@
         }
       }
     },
+    "Are you sure you want to return to the lists page? You haven't confirmed all the items yet" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هل أنت متأكد من رغبتك في العودة إلى صفحة القوائم؟ لم تقم بتأكيد جميع العناصر بعد."
+          }
+        }
+      }
+    },
+    "Back to Lists?" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العودة للقوائم ؟"
+          }
+        }
+      }
+    },
     "Collaborative" : {
       "localizations" : {
         "ar" : {
@@ -433,6 +453,16 @@
         }
       }
     },
+    "Leave" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المغادره"
+          }
+        }
+      }
+    },
     "Light Mode" : {
       "localizations" : {
         "ar" : {
@@ -772,6 +802,16 @@
         }
       }
     },
+    "Stay" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "البقاء"
+          }
+        }
+      }
+    },
     "Use your Apple ID to sign in" : {
       "localizations" : {
         "ar" : {
@@ -913,6 +953,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "لا يوجد لديك إشعارات "
+          }
+        }
+      }
+    },
+    "You haven't finished selecting items in all categories. Do you want to leave anyway?" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هل أنت متأكد من رغبتك في العودة إلى صفحة القوائم؟ لم تقم بتأكيد جميع العناصر بعد."
           }
         }
       }

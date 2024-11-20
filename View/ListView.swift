@@ -15,8 +15,9 @@ struct ListView: View {
     @ObservedObject private var createListViewModel: CreateListViewModel
     @State private var listName: String
     @State private var newItem: String = ""
-    @State private var textFieldHeight: CGFloat = 40
-    
+    @State private var textFieldHeight: CGFloat = 90
+    @State private var isNameFieldShaking = false
+
     @EnvironmentObject var userSession: UserSession
     
     init(categories: [GroceryCategory], listID: CKRecord.ID?, listName: String?, userSession: UserSession) {
@@ -40,8 +41,14 @@ struct ListView: View {
             VStack {
                 HStack {
                     Button(action: {
-                        presentationMode.wrappedValue.dismiss() // زر العودة للصفحة السابقة
-                    }) {
+                          if viewModel.categories.allSatisfy({ $0.items.allSatisfy({ $0.isSelected }) }) {
+                              // إذا كانت كل العناصر محددة، اسمح بالخروج
+                              presentationMode.wrappedValue.dismiss()
+                          } else {
+                              // عرض التنبيه إذا لم تكتمل الاختيارات
+                              showAlert = true
+                          }
+                      }) {
                         ZStack {
                             Circle()
                                 .fill(Color("CircleColor"))
@@ -53,9 +60,13 @@ struct ListView: View {
                         }
                     }
                     Spacer()
-                    TextField("Enter Name", text: $createListViewModel.listName)                        .font(.system(size: 22, weight: .bold))
+                    TextField("Enter Name", text: $createListViewModel.listName)
+                        .font(.system(size: 22, weight: .bold))
                         .multilineTextAlignment(.center)
                         .foregroundColor(Color("PrimaryColor"))
+                        .offset(x: isNameFieldShaking ? -10 : 0) // اهتزاز الحقل
+                        .animation(.default, value: isNameFieldShaking) // تطبيق الحركة
+
                     
                     Spacer()
                                          Menu {
@@ -82,8 +93,20 @@ struct ListView: View {
                                         }
                     
                 }
+                
                 .padding(.horizontal)
                 .padding(.top, 20)
+                .alert(isPresented: $showAlert) {
+                    Alert(
+                        title: Text("Back to Lists?"),
+                        message: Text("You haven't finished selecting items in all categories. Do you want to leave anyway?"),
+                        primaryButton: .destructive(Text("Leave")) {
+                            // السماح بالخروج
+                            presentationMode.wrappedValue.dismiss()
+                        },
+                        secondaryButton: .cancel(Text("Stay"))
+                    )
+                }
                 
                 HStack {
                     Text("Items 🛒")
@@ -138,9 +161,27 @@ struct ListView: View {
                                 .stroke(Color.gray, lineWidth: 0.1)
                         )
                         Button(action: {
+                            // تحقق إذا كان الاسم فارغًا
+                            if createListViewModel.listName.isEmpty {
+                                // تشغيل الاهتزاز
+                                withAnimation {
+                                    isNameFieldShaking = true
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                    withAnimation {
+                                        isNameFieldShaking = false
+                                    }
+                                }
+                                
+                                // اهتزاز الجهاز
+                                let generator = UINotificationFeedbackGenerator()
+                                generator.notificationOccurred(.error)
+                                return
+                            }
+
+                            // باقي منطق الحفظ
                             createListViewModel.saveListToCloudKit(userSession: createListViewModel.userSession, listName: createListViewModel.listName) { listID in
                                 guard let listID = listID else { return }
-                                
                                 let listReference = CKRecord.Reference(recordID: listID, action: .deleteSelf)
                                 
                                 // تصنيف المنتجات قبل الحفظ
@@ -148,14 +189,12 @@ struct ListView: View {
                                 
                                 for category in createListViewModel.categorizedProducts {
                                     for item in category.items {
-                                        // تحقق إذا كان العنصر موجودًا في التصنيف الحالي
                                         if let categoryIndex = viewModel.categories.firstIndex(where: { $0.name == category.name }),
                                            let itemIndex = viewModel.categories[categoryIndex].items.firstIndex(where: { $0.name.lowercased() == item.name.lowercased() }) {
-                                            // إذا كان العنصر موجودًا، قم بزيادة الكمية
                                             DispatchQueue.main.async {
                                                 viewModel.categories[categoryIndex].items[itemIndex].quantity += item.quantity
                                             }
-                                            
+
                                             // تحديث العنصر في قاعدة البيانات
                                             createListViewModel.saveItem(
                                                 name: item.name,
@@ -168,16 +207,14 @@ struct ListView: View {
                                                 }
                                             }
                                         } else {
-                                            // إذا كان العنصر غير موجود، أضفه كعنصر جديد
                                             DispatchQueue.main.async {
                                                 if let categoryIndex = viewModel.categories.firstIndex(where: { $0.name == category.name }) {
                                                     viewModel.categories[categoryIndex].items.append(item)
                                                 } else {
-                                                    // إضافة تصنيف جديد إذا لم يكن موجودًا
                                                     viewModel.categories.append(category)
                                                 }
                                             }
-                                            
+
                                             // حفظ العنصر الجديد في قاعدة البيانات
                                             createListViewModel.saveItem(
                                                 name: item.name,
@@ -203,6 +240,7 @@ struct ListView: View {
                                     .font(.system(size: 20))
                             }
                         }
+
                         
                     }.popoverTip(addItemTip)
                         .padding()
@@ -285,12 +323,12 @@ struct ListView_Previews: PreviewProvider {
     static var previews: some View {
         let groceryItems: [GroceryCategory] = [
             GroceryCategory(name: "Bakery", items: [
-                GroceryItem(name: "Bread", quantity: 2),
-                GroceryItem(name: "Croissant", quantity: 5)
+                GroceryItem(name: "Bread", itemId: UUID(), quantity: 2),
+                GroceryItem(name: "Croissant", itemId: UUID(), quantity: 5)
             ]),
             GroceryCategory(name: "Fruits & Vegetables", items: [
-                GroceryItem(name: "Apple", quantity: 4),
-                GroceryItem(name: "Banana", quantity: 3)
+                GroceryItem(name: "Apple", itemId: UUID(), quantity: 4),
+                GroceryItem(name: "Banana", itemId: UUID(), quantity: 3)
             ])
         ]
 

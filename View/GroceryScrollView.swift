@@ -79,12 +79,18 @@ struct GroceryScrollView: View {
                             .padding(.horizontal)
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button(role: .destructive) {
+                                    viewModel.deleteItem(at: categoryIndex, itemIndex: itemIndex) { success in
+                                        if success {
+                                            print("Item successfully deleted.")
+                                        } else {
+                                            print("Failed to delete item.")
+                                        }
+                                    }
                                 } label: {
                                     Label("Delete", systemImage: "trash")
                                 }
-                                
-                      
-                            }.enableScrollViewSwipeActions()
+                            }
+.enableScrollViewSwipeActions()
                             
                             if itemIndex != category.items.count - 1 {
                                 Divider()

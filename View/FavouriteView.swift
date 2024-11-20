@@ -105,16 +105,19 @@ struct FavouriteView: View {
             .padding(.top, 30)
         }
         .background(
-            NavigationLink(
-                destination: ListView(
-                    categories:listViewModel.categories,
+            NavigationLink(// for fetch
+                destination: DisplayListView(
+                    categories: listViewModel.categories,
                     listID: selectedList?.recordID,
                     listName: selectedList?.listName,
                     userSession: userSession
                 ),
                 isActive: $isNavigatingToList
             ) { EmptyView() }
+
+
         )
+
     }
     
     var profileImageView: some View {

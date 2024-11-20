@@ -19,7 +19,7 @@ struct DisplayListView: View {
     @ObservedObject private var createListViewModel: CreateListViewModel
     @State private var listName: String
     @State private var newItem: String = ""
-    @State private var textFieldHeight: CGFloat = 40
+    @State private var textFieldHeight: CGFloat = 90
     let addItemTip = AddItemTip()
     @EnvironmentObject var userSession: UserSession
     
@@ -42,7 +42,13 @@ struct DisplayListView: View {
             VStack {
                 HStack {
                     Button(action: {
-                        presentationMode.wrappedValue.dismiss() // زر العودة للصفحة السابقة
+                        if viewModel.categories.allSatisfy({ $0.items.allSatisfy({ $0.isSelected }) }) {
+                            // إذا كانت كل العناصر محددة، اسمح بالخروج
+                            presentationMode.wrappedValue.dismiss()
+                        } else {
+                            // عرض التنبيه إذا لم تكتمل الاختيارات
+                            showAlert = true
+                        }
                     }) {
                         ZStack {
                             Circle()
@@ -87,6 +93,17 @@ struct DisplayListView: View {
                 }
                 .padding(.horizontal)
                 .padding(.top, 20)
+                .alert(isPresented: $showAlert) {
+                    Alert(
+                        title: Text("Back to Lists?"),
+                        message: Text("Are you sure you want to return to the lists page? You haven't confirmed all the items yet"),
+                        primaryButton: .destructive(Text("Leave")) {
+                            // السماح بالخروج
+                            presentationMode.wrappedValue.dismiss()
+                        },
+                        secondaryButton: .cancel(Text("Stay"))
+                    )
+                }
                 
                 HStack {
                     Text("Items 🛒")
@@ -310,27 +327,28 @@ struct DisplayListView: View {
 
 
 struct DisplayListView_Previews: PreviewProvider {
-    static var previews: some View {
-        let groceryItems: [GroceryCategory] = [
-            GroceryCategory(name: "Bakery", items: [
-                GroceryItem(name: "Bread", quantity: 2),
-                GroceryItem(name: "Croissant", quantity: 5)
-            ]),
-            GroceryCategory(name: "Fruits & Vegetables", items: [
-                GroceryItem(name: "Apple", quantity: 4),
-                GroceryItem(name: "Banana", quantity: 3)
-            ])
-        ]
-        
-        let mockListID = CKRecord.ID(recordName: "mockRecordID")
-        let mockListName = "Sample List"
-        
-        DisplayListView(categories: groceryItems, listID: mockListID, listName: mockListName, userSession: UserSession.shared)
-            .environmentObject(UserSession.shared)
-            .environment(\.layoutDirection, .rightToLeft)
-            .previewLayout(.sizeThatFits)
+        static var previews: some View {
+            let groceryItems: [GroceryCategory] = [
+                GroceryCategory(name: "Bakery", items: [
+                    GroceryItem(name: "Bread", itemId: UUID(), quantity: 2),
+                    GroceryItem(name: "Croissant", itemId: UUID(), quantity: 5)
+                ]),
+                GroceryCategory(name: "Fruits & Vegetables", items: [
+                    GroceryItem(name: "Apple", itemId: UUID(), quantity: 4),
+                    GroceryItem(name: "Banana", itemId: UUID(), quantity: 3)
+                ])
+            ]
+
+            let mockListID = CKRecord.ID(recordName: "mockRecordID")
+            let mockListName = "Sample List"
+
+            ListView(categories: groceryItems, listID: mockListID, listName: mockListName, userSession: UserSession.shared)
+                .environmentObject(UserSession.shared)
+                .environment(\.layoutDirection, .rightToLeft)
+                .previewLayout(.sizeThatFits)
+        }
     }
-}
+
 
 //#Preview {
 //    DisplayListView()
