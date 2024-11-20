@@ -236,6 +236,7 @@ struct DisplayListView: View {
 
         // تصنيف المنتجات قبل التحديث
         createListViewModel.classifyProducts()
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 
         for category in createListViewModel.categorizedProducts {
             for item in category.items {
@@ -302,6 +303,8 @@ struct DisplayListView: View {
                 }
             }
         }
+        createListViewModel.userInput = ""
+
     }
 
 

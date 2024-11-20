@@ -90,7 +90,6 @@ struct CustomTextField: UIViewRepresentable {
         }
     }
 }
-
 struct ExpandingTextField: UIViewRepresentable {
     @Binding var text: String
     @Binding var dynamicHeight: CGFloat
@@ -116,19 +115,16 @@ struct ExpandingTextField: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UITextView, context: Context) {
-        // التأكد من عدم تغيير النص إذا كان المستخدم يكتب أو إذا كان النص الافتراضي موجودًا
-        if uiView.text == placeholder && !text.isEmpty {
+        // إذا تغير النص المرتبط بالـ @Binding، قم بتحديث واجهة المستخدم
+        if text.isEmpty {
+            uiView.text = placeholder
+            uiView.textColor = UIColor.gray
+        } else if uiView.text != text {
             uiView.text = text
             uiView.textColor = UIColor.black
         }
 
-        // لا تعيين النص الافتراضي إذا كان النص فارغًا هنا
-        if uiView.text.isEmpty && !text.isEmpty {
-            uiView.text = text
-            uiView.textColor = UIColor.black
-        }
-
-        // تحديث ارتفاع النص
+        // إعادة حساب ارتفاع النص
         ExpandingTextField.recalculateHeight(view: uiView, result: $dynamicHeight)
     }
 

@@ -65,8 +65,11 @@ class CreateListViewModel: ObservableObject {
             return
         }
         
+        // تنظيف النصوص: إزالة الحروف المفردة، الكلمات المكررة، والكلمات من stopWords
+        let cleanedInput = cleanInputText(userInput)
+        
         // فصل المنتجات بناءً على الأسطر
-        let lines = userInput.split(separator: "\n")
+        let lines = cleanedInput.split(separator: "\n")
         var products: [String] = []
         
         for line in lines {
@@ -104,6 +107,7 @@ class CreateListViewModel: ObservableObject {
         // تحويل النتائج إلى مصفوفة من GroceryCategory
         categorizedProducts = categoryDict.map { GroceryCategory(name: $0.key, items: $0.value) }
     }
+  
 
 
 
@@ -213,6 +217,46 @@ class CreateListViewModel: ObservableObject {
 }
 
 
+private let stopWords: Set<String> = [
+    // كلمات إنجليزية
+    "the", "a", "an", "and", "of", "on", "in", "at", "for", "with", "about", "against", "between",
+    "into", "through", "during", "before", "after", "above", "below", "to", "from", "up", "down",
+    "out", "over", "under", "please", "buy", "need", "some",
+    
+    // كلمات عربية
+    "من", "على", "في", "إلى", "عن", "مع", "بين", "خلال", "قبل", "بعد", "فوق", "تحت", "ل", "ب", "و", "أن", "رجاء", "يرجى", "شراء"
+]
+
+/// دالة لإزالة الكلمات المفردة والتكرارات
+private func cleanInputText(_ text: String) -> String {
+    // فصل النص إلى كلمات
+    let words = text.split(separator: " ")
+    
+    // فلترة الكلمات بناءً على الشرط التالي:
+    let filteredWords = words.filter { word in
+        let wordStr = word.lowercased()
+        
+        // استبعاد الكلمات المفردة أو التي تحتوي فقط على حروف مكررة
+        let isSingleOrRepeated = isSingleOrRepeatedCharacter(word: wordStr)
+        
+        // استبعاد الكلمات الموجودة في قائمة stopWords
+        let isStopWord = stopWords.contains(wordStr)
+        
+        return !(isSingleOrRepeated || isStopWord)
+    }
+    
+    // إعادة النص المصفي
+    return filteredWords.joined(separator: " ")
+}
+
+/// دالة تتحقق إذا كانت الكلمة مفردة أو تتكون من أحرف مكررة
+private func isSingleOrRepeatedCharacter(word: String) -> Bool {
+    if word.count == 1 { return true } // الكلمة مفردة
+    let pattern = #"^(.)\1*$"# // نمط للتحقق من الكلمات المكررة
+    let regex = try? NSRegularExpression(pattern: pattern)
+    let range = NSRange(location: 0, length: word.count)
+    return regex?.firstMatch(in: word, options: [], range: range) != nil
+}
 
 extension CreateListViewModel {
     // Fetch all lists from CloudKit and store them in a published array

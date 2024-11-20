@@ -172,7 +172,7 @@ struct ListView: View {
                                         isNameFieldShaking = false
                                     }
                                 }
-                                
+
                                 // اهتزاز الجهاز
                                 let generator = UINotificationFeedbackGenerator()
                                 generator.notificationOccurred(.error)
@@ -183,10 +183,16 @@ struct ListView: View {
                             createListViewModel.saveListToCloudKit(userSession: createListViewModel.userSession, listName: createListViewModel.listName) { listID in
                                 guard let listID = listID else { return }
                                 let listReference = CKRecord.Reference(recordID: listID, action: .deleteSelf)
-                                
+
                                 // تصنيف المنتجات قبل الحفظ
                                 createListViewModel.classifyProducts()
-                                
+
+                                // إخفاء لوحة المفاتيح بعد التصنيف
+                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+
+                                // تفريغ الإدخال
+                                createListViewModel.userInput = ""
+
                                 for category in createListViewModel.categorizedProducts {
                                     for item in category.items {
                                         if let categoryIndex = viewModel.categories.firstIndex(where: { $0.name == category.name }),
@@ -240,6 +246,7 @@ struct ListView: View {
                                     .font(.system(size: 20))
                             }
                         }
+
 
                         
                     }.popoverTip(addItemTip)
