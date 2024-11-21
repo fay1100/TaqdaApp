@@ -342,9 +342,10 @@ extension CreateListViewModel {
             return
         }
 
-        
+        // رابط المشاركة
         let shareableLink = "https://testflight.apple.com/join/qBe7mNUW" + "?listID=\(listID.recordName)"
 
+        // رسالة المشاركة
         let shareMessage = """
         Hey! I've shared a grocery list with you: \(listName).
         Click the link to join and collaborate: \(shareableLink)
@@ -355,7 +356,31 @@ extension CreateListViewModel {
         if let topController = UIApplication.shared.windows.first?.rootViewController {
             topController.present(activityViewController, animated: true, completion: nil)
         }
+
+        // تحديث الحقل isShared في CloudKit
+        let database = CKContainer.default().publicCloudDatabase
+
+        database.fetch(withRecordID: listID) { record, error in
+            if let record = record {
+                // ضبط قيمة isShared إلى 1
+                record["isShared"] = 1 as CKRecordValue
+
+                database.save(record) { _, saveError in
+                    if let saveError = saveError {
+                        print("Error updating isShared: \(saveError.localizedDescription)")
+                    } else {
+                        DispatchQueue.main.async {
+                            self.isShared = true
+                            print("List is now marked as shared.")
+                        }
+                    }
+                }
+            } else if let error = error {
+                print("Error fetching record: \(error.localizedDescription)")
+            }
+        }
     }
+
 
     func updateIsShared(for listID: CKRecord.ID, isShared: Bool, completion: @escaping (Bool) -> Void) {
         let database = CKContainer.default().publicCloudDatabase
