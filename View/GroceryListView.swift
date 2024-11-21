@@ -3,8 +3,8 @@ import SwiftUI
 struct GroceryListView: View {
     var listName: String
     @Binding var isHeartSelected: Bool
-    var isShared: Bool // خاصية تحدد إذا كانت القائمة مشتركة
-    var onHeartTapped: () -> Void // وظيفة ممررة لتحديث الحالة
+    var isShared: Bool
+    var onHeartTapped: () -> Void
 
     var body: some View {
         VStack(spacing: 16) {
@@ -13,7 +13,7 @@ struct GroceryListView: View {
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.white)
                     .padding(.bottom, 50)
-                
+
                 HStack {
                     Button(action: {
                         onHeartTapped()
@@ -23,11 +23,9 @@ struct GroceryListView: View {
                                 Circle()
                                     .fill(Color.white)
                                     .frame(width: 30, height: 30)
-                                
                                 Image(systemName: "heart.fill")
                                     .foregroundColor(.red)
                                     .font(.system(size: 17))
-                                
                             } else {
                                 Image(systemName: "heart.circle.fill")
                                     .foregroundColor(.white)
@@ -36,9 +34,9 @@ struct GroceryListView: View {
                         }
                         .padding(.trailing, 20)
                     }
-                    
-                    Image(systemName: isShared ? "person.2.circle" : "person.circle.fill") // تغيير الأيقونة بناءً على حالة المشاركة
-                        .foregroundColor(isShared ? Color("ShareColor") :  Color.white) // تغيير اللون بناءً على حالة المشاركة
+
+                    Image(systemName: isShared ? "person.2.circle" : "person.circle.fill")
+                        .foregroundColor(isShared ? Color("ShareColor") : Color.white)
                         .font(.system(size: 30))
                         .padding(.leading, -20)
                 }
@@ -50,28 +48,33 @@ struct GroceryListView: View {
     }
 }
 
-#Preview {
-    @State var isHeartSelectedPreview = false
 
-    return VStack {
-        GroceryListView(
-            listName: "Shared List",
-            isHeartSelected: $isHeartSelectedPreview,
-            isShared: true, // قائمة مشتركة
-            onHeartTapped: {
-                isHeartSelectedPreview.toggle()
-                print("Tapped on Shared List. New state: \(isHeartSelectedPreview)")
-            }
-        )
-        
-        GroceryListView(
-            listName: "Personal List",
-            isHeartSelected: $isHeartSelectedPreview,
-            isShared: false, // قائمة غير مشتركة
-            onHeartTapped: {
-                isHeartSelectedPreview.toggle()
-                print("Tapped on Personal List. New state: \(isHeartSelectedPreview)")
-            }
-        )
+struct GroceryListView_Previews: PreviewProvider {
+    @State static var isHeartSelectedPreview = false
+    static var mockViewModel = CreateListViewModel(userSession: UserSession.shared)
+
+    static var previews: some View {
+        VStack {
+            GroceryListView(
+                listName: "Shared List",
+                isHeartSelected: $isHeartSelectedPreview,
+                isShared: true, // Pass the isShared value
+                onHeartTapped: {
+                    isHeartSelectedPreview.toggle()
+                    print("Tapped on Shared List. New state: \(isHeartSelectedPreview)")
+                }
+            )
+            
+            GroceryListView(
+                listName: "Personal List",
+                isHeartSelected: $isHeartSelectedPreview,
+                isShared: false, // Pass the isShared value
+                onHeartTapped: {
+                    isHeartSelectedPreview.toggle()
+                    print("Tapped on Personal List. New state: \(isHeartSelectedPreview)")
+                }
+            )
+        }
+        .previewLayout(.sizeThatFits)
     }
 }

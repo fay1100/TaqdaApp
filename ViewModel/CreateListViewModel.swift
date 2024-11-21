@@ -27,6 +27,8 @@ class CreateListViewModel: ObservableObject {
     @Published var listName: String = ""
     @Published var userInput: String = ""
     @Published var categorizedProducts: [GroceryCategory] = []
+    @Published var isShared: Bool = false// خاصية تحدد إذا كانت القائمة مشتركة
+
     @Published var showResults: Bool = false {
          didSet {
              print("showResults updated to: \(showResults)")
@@ -285,7 +287,123 @@ extension CreateListViewModel {
         }
     }
 
+//    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+//        guard let url = userActivity.webpageURL else {
+//            return false
+//        }
+//        handleDeepLink(url: url)
+//        return true
+//    }
+//
+//    func handleDeepLink(url: URL) {
+//        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
+//              let queryItems = components.queryItems else {
+//            return
+//        }
+//        
+//        if let listID = queryItems.first(where: { $0.name == "listID" })?.value {
+//            // استخدم listID للانتقال إلى شاشة القائمة المشتركة
+//            navigateToSharedList(listID: listID)
+//        }
+//    }
 
+//    func navigateToSharedList(listID: String) {
+//        // تحويل الـ String إلى CKRecord.ID
+//        let recordID = CKRecord.ID(recordName: listID)
+//
+//        // جلب تفاصيل القائمة من CloudKit باستخدام recordID
+//        viewModel.fetchItems(for: recordID) { success in
+//            if success {
+//                DispatchQueue.main.async {
+//                    let sharedListView = DisplayListView(
+//                        categories: viewModel.categories,
+//                        listID: recordID,
+//                        listName: viewModel.listName,
+//                        userSession: userSession
+//                    )
+//                    
+//                    // التنقل إلى واجهة العرض
+//                    if let window = UIApplication.shared.windows.first {
+//                        window.rootViewController = UIHostingController(rootView: sharedListView)
+//                        window.makeKeyAndVisible()
+//                    } else {
+//                        print("Error: Unable to find the root window.")
+//                    }
+//                }
+//            } else {
+//                print("Error: Failed to fetch items for the shared list.")
+//            }
+//        }
+//    }
+
+    public func shareList(listID: CKRecord.ID?, listName: String) {
+        guard let listID = listID else {
+            print("List ID is missing.")
+            return
+        }
+
+        
+        let shareableLink = "https://testflight.apple.com/join/qBe7mNUW" + "?listID=\(listID.recordName)"
+
+        let shareMessage = """
+        Hey! I've shared a grocery list with you: \(listName).
+        Click the link to join and collaborate: \(shareableLink)
+        """
+
+        let activityViewController = UIActivityViewController(activityItems: [shareMessage], applicationActivities: nil)
+
+        if let topController = UIApplication.shared.windows.first?.rootViewController {
+            topController.present(activityViewController, animated: true, completion: nil)
+        }
+    }
+
+    func updateIsShared(for listID: CKRecord.ID, isShared: Bool, completion: @escaping (Bool) -> Void) {
+        let database = CKContainer.default().publicCloudDatabase
+
+        database.fetch(withRecordID: listID) { record, error in
+            if let record = record {
+                record["isShared"] = isShared as CKRecordValue
+
+                database.save(record) { _, saveError in
+                    if let saveError = saveError {
+                        print("Error updating isShared: \(saveError.localizedDescription)")
+                        completion(false)
+                    } else {
+                        completion(true)
+                    }
+                }
+            } else if let error = error {
+                print("Error fetching record: \(error.localizedDescription)")
+                completion(false)
+            }
+        }
+    }
+    func subscribeToListUpdates(listID: CKRecord.ID) {
+        let subscription = CKQuerySubscription(
+            recordType: "ListItem",
+            predicate: NSPredicate(format: "listID == %@", listID),
+            subscriptionID: "\(listID)-updates",
+            options: [.firesOnRecordCreation, .firesOnRecordUpdate]
+        )
+
+        let notificationInfo = CKSubscription.NotificationInfo()
+        notificationInfo.alertBody = "The list was updated."
+        notificationInfo.shouldBadge = true
+        subscription.notificationInfo = notificationInfo
+
+        CKContainer.default().publicCloudDatabase.save(subscription) { _, error in
+            if let error = error {
+                print("Error saving subscription: \(error.localizedDescription)")
+            } else {
+                print("Subscription saved successfully.")
+            }
+        }
+    }
+
+
+
+
+    
 
 
 
@@ -461,6 +579,13 @@ extension CreateListViewModel {
                         completion(nil)
                     } else {
                         print("List created successfully.")
+                        print("Saving new list with fields:")
+                        print("list_name: \(listName)")
+                        print("isShared: false")
+                        print("created_at: \(Date())")
+                        print("updated_at: \(Date())")
+                        print("list_id: \(newList.recordID.recordName)")
+                        print("user_id: \(userID)")
                         self.currentListID = record?.recordID
                         completion(record?.recordID)
                     }

@@ -71,7 +71,9 @@ struct ListView: View {
                     Spacer()
                                          Menu {
                                             Button(action: {
-                                                shareList()
+                                                createListViewModel.shareList(listID: createListViewModel.currentListID , listName: listName)
+                                                createListViewModel.isShared = true
+                                                  
                                             }) {
                                                 Label("Share", systemImage: "square.and.arrow.up")
                                             }
@@ -273,21 +275,7 @@ struct ListView: View {
 
         
     }
-    private func shareList() {
-        let listContent = """
-        List Name: \(listName)
-        
-        Items:
-        \(viewModel.categories.flatMap { $0.items }.map { "- \($0.name) (\($0.quantity))" }.joined(separator: "\n"))
-        """
-        
-        let activityViewController = UIActivityViewController(activityItems: [listContent], applicationActivities: nil)
-        
-        // لضمان عرض واجهة المشاركة بشكل صحيح:
-        if let topController = UIApplication.shared.windows.first?.rootViewController {
-            topController.present(activityViewController, animated: true, completion: nil)
-        }
-    }
+   
     private func deleteListAndMoveToMain() {
         guard let listID = viewModel.listID else { return }
         
@@ -302,11 +290,12 @@ struct ListView: View {
             }
         }
     }
-    
-    
-    
-    
-    
+//    
+//    func generateShareLink(listID: CKRecord.ID?, listName: String) -> URL? {
+//        let baseURL = "https://testflight.apple.com/join/qBe7mNUW" + "?listID=\(listID.recordName)"
+//        return URL(string: "\(baseURL)?listID=\(listID)")
+//    }
+   
 
     private func requestNotificationPermission(completion: @escaping (Bool) -> Void) {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in

@@ -4,12 +4,12 @@ import CloudKit
 struct FavouriteView: View {
     @StateObject private var vm: CloudKitUserBootcampViewModel
     @StateObject private var viewModel: CreateListViewModel
+    @StateObject private var listViewModel: ListViewModel
     @EnvironmentObject var userSession: UserSession
-    @State private var showNotificationView = false // حالة التنقل
-    @State private var favoriteLists: [List] = [] // القوائم المفضلة
-    @State private var selectedList: List? // القائمة المحددة للتنقل
-    @State private var isNavigatingToList = false // التحكم في التنقل إلى التفاصيل
-    @ObservedObject private var listViewModel: ListViewModel
+    @State private var showNotificationView = false // For navigating to notifications
+    @State private var favoriteLists: [List] = [] // Favorite lists
+    @State private var selectedList: List? // Currently selected list
+    @State private var isNavigatingToList = false // Navigation control for list details
 
     init(
         categories: [GroceryCategory] = [],
@@ -19,27 +19,27 @@ struct FavouriteView: View {
         let userSession = UserSession.shared
         _vm = StateObject(wrappedValue: CloudKitUserBootcampViewModel(userSession: userSession))
         _viewModel = StateObject(wrappedValue: CreateListViewModel(userSession: userSession))
-        
-        // Initialize listViewModel
-        self.listViewModel = ListViewModel(
-            categories: categories,
-            listID: listID,
-            listName: listName ?? "Unnamed List",
-            createListViewModel: CreateListViewModel(userSession: userSession)
+        _listViewModel = StateObject(
+            wrappedValue: ListViewModel(
+                categories: categories,
+                listID: listID,
+                listName: listName ?? "Unnamed List",
+                createListViewModel: CreateListViewModel(userSession: userSession)
+            )
         )
     }
 
-    
     var body: some View {
         NavigationStack {
             ZStack {
                 Color("backgroundApp")
                     .ignoresSafeArea()
-                
+
                 VStack {
                     headerView
-                    
+
                     Spacer()
+
                     if favoriteLists.isEmpty {
                         emptyStateView
                     } else {
@@ -52,7 +52,7 @@ struct FavouriteView: View {
             fetchFavoriteLists()
         }
     }
-    
+
     var headerView: some View {
         HStack {
             profileImageView
@@ -63,7 +63,7 @@ struct FavouriteView: View {
         .padding()
         .background(Color("headerBackground"))
     }
-    
+
     var emptyStateView: some View {
         VStack {
             Spacer()
@@ -74,30 +74,30 @@ struct FavouriteView: View {
             Spacer()
         }
     }
-    
+
     var listView: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 5) {
                 ForEach(favoriteLists, id: \.listId) { list in
                     ZStack {
                         GroceryListView(
-                                     listName: list.listName,
-                                     isHeartSelected: .constant(list.isFavorite),
-                                     isShared: list.isShared, // تمرير قيمة isShared هنا
-                                     onHeartTapped: {
-                                         let newFavoriteStatus = false
-                                         updateFavoriteStatus(for: list, isFavorite: newFavoriteStatus) { success in
-                                             if success {
-                                                 if let index = favoriteLists.firstIndex(where: { $0.listId == list.listId }) {
-                                                     favoriteLists.remove(at: index)
-                                                 }
-                                             }
-                                         }
-                                     }
-                                 )
-                                 .onTapGesture {
-                                     navigateToList(list)
-                                 }
+                            listName: list.listName,
+                            isHeartSelected: .constant(list.isFavorite),
+                            isShared: list.isShared, // Pass `isShared` property
+                            onHeartTapped: {
+                                let newFavoriteStatus = false
+                                updateFavoriteStatus(for: list, isFavorite: newFavoriteStatus) { success in
+                                    if success {
+                                        if let index = favoriteLists.firstIndex(where: { $0.listId == list.listId }) {
+                                            favoriteLists.remove(at: index)
+                                        }
+                                    }
+                                }
+                            }
+                        )
+                        .onTapGesture {
+                            navigateToList(list)
+                        }
                     }
                 }
             }
@@ -105,7 +105,7 @@ struct FavouriteView: View {
             .padding(.top, 30)
         }
         .background(
-            NavigationLink(// for fetch
+            NavigationLink(
                 destination: DisplayListView(
                     categories: listViewModel.categories,
                     listID: selectedList?.recordID,
@@ -113,19 +113,18 @@ struct FavouriteView: View {
                     userSession: userSession
                 ),
                 isActive: $isNavigatingToList
-            ) { EmptyView() }
-
-
+            ) {
+                EmptyView()
+            }
         )
-
     }
-    
+
     var profileImageView: some View {
         ZStack {
             Circle()
                 .fill(Color("CircleColor"))
                 .frame(width: 50, height: 50)
-            
+
             if let profileImage = vm.profileImage {
                 Image(uiImage: profileImage)
                     .resizable()
@@ -141,7 +140,7 @@ struct FavouriteView: View {
             }
         }
     }
-    
+
     var userGreetingView: some View {
         VStack(alignment: .leading) {
             Text("Welcome")
@@ -153,14 +152,14 @@ struct FavouriteView: View {
                 .fontWeight(.bold)
         }
     }
-    
+
     var bellButton: some View {
         NavigationLink(destination: NotificationView(), isActive: $showNotificationView) {
             ZStack {
                 Circle()
                     .fill(Color("CircleColor"))
                     .frame(width: 40, height: 40)
-                
+
                 Image(systemName: "bell")
                     .resizable()
                     .frame(width: 18, height: 22)
@@ -172,7 +171,7 @@ struct FavouriteView: View {
         }
         .padding(.trailing)
     }
-    
+
     private func fetchFavoriteLists() {
         viewModel.fetchLists { success in
             if success {
@@ -184,16 +183,15 @@ struct FavouriteView: View {
             }
         }
     }
-    
-    
+
     private func navigateToList(_ list: List) {
         selectedList = list
-        
+
         guard let recordID = list.recordID else {
             print("Record ID is nil for the selected list.")
             return
         }
-        
+
         listViewModel.fetchItems(for: recordID) { success in
             if success {
                 print("Items fetched for list: \(list.listName)")
@@ -205,7 +203,6 @@ struct FavouriteView: View {
             }
         }
     }
-
 }
 
 struct FavouriteView_Previews: PreviewProvider {
@@ -214,3 +211,4 @@ struct FavouriteView_Previews: PreviewProvider {
             .environmentObject(UserSession.shared)
     }
 }
+

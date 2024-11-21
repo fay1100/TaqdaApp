@@ -19,6 +19,7 @@ class ListViewModel: ObservableObject {
       @Published var listName: String = "Unnamed List"
       @Published var isListComplete: Bool = false
       @Published var currentListID: CKRecord.ID? = nil
+  //  var isShared: Bool // Add `isShared` here
 
     private var createListViewModel: CreateListViewModel
 
@@ -32,6 +33,7 @@ class ListViewModel: ObservableObject {
         self.listName = listName ?? "Unnamed List"
         self.createListViewModel = createListViewModel
         self.createListViewModel.currentListID = listID
+        //self.isShared = isShared // Assign the value
     }
     func refreshCategories(with newCategories: [GroceryCategory]) {
           DispatchQueue.main.async {
